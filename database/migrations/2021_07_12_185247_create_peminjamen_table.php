@@ -13,16 +13,16 @@ class CreatePeminjamenTable extends Migration
      */
     public function up()
     {
-        Schema::create('peminjamans', function (Blueprint $table) {
+        Schema::create('tb_pinjam', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('id_siswa')->unsigned()->nullable(true);
-            $table->foreign('id_siswa')->references('id')->on('siswas');
+            $table->foreign('id_siswa')->references('id')->on('tb_siswa');
             $table->bigInteger('id_barang')->unsigned()->nullable(true);
-            $table->foreign('id_barang')->references('id')->on('barangs');
+            $table->foreign('id_barang')->references('id')->on('tb_barang');
             $table->integer('qty');
             $table->tinyInteger('status');
             $table->bigInteger('id_guru')->unsigned()->nullable(true);
-            $table->foreign('id_guru')->references('id')->on('gurus');
+            $table->foreign('id_guru')->references('id')->on('tb_guru');
             $table->timestamps();
         });
     }
@@ -34,6 +34,6 @@ class CreatePeminjamenTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('peminjamans');
+        Schema::dropIfExists('tb_pinjam');
     }
 }

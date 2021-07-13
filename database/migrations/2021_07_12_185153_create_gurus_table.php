@@ -13,14 +13,13 @@ class CreateGurusTable extends Migration
      */
     public function up()
     {
-        Schema::create('gurus', function (Blueprint $table) {
+        Schema::create('tb_guru', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('id_user')->unsigned()->nullable(true);
-            $table->foreign('id_user')->references('id')->on('users');
+            $table->foreign('id_user')->references('id')->on('tb_user');
             $table->string('nama');
-            $table->string('alamat');
-            $table->date('tanggal');
-            $table->text('mapel');
+            $table->string('alamat')->nullable(true);
+            $table->date('tanggal')->nullable(true);
             $table->timestamps();
         });
     }
@@ -32,6 +31,6 @@ class CreateGurusTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('gurus');
+        Schema::dropIfExists('tb_guru');
     }
 }

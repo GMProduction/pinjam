@@ -13,11 +13,10 @@ class CreateBarangsTable extends Migration
      */
     public function up()
     {
-        Schema::create('barangs', function (Blueprint $table) {
+        Schema::create('tb_barang', function (Blueprint $table) {
             $table->id();
             $table->string('nama_barang');
             $table->integer('qty');
-            $table->text('deskripsi')->nullable(true);
             $table->timestamps();
         });
     }
@@ -29,6 +28,6 @@ class CreateBarangsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('barangs');
+        Schema::dropIfExists('tb_barang');
     }
 }

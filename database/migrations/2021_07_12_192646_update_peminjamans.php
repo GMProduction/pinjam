@@ -14,9 +14,9 @@ class UpdatePeminjamans extends Migration
     public function up()
     {
         //
-        Schema::table('peminjamans', function (Blueprint $table) {
+        Schema::table('tb_pinjam', function (Blueprint $table) {
             $table->bigInteger('id_staf')->unsigned()->nullable(true);
-            $table->foreign('id_staf')->references('id')->on('stafs');
+            $table->foreign('id_staf')->references('id')->on('tb_staf');
         });
     }
 

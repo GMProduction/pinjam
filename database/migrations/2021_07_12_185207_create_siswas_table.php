@@ -13,15 +13,15 @@ class CreateSiswasTable extends Migration
      */
     public function up()
     {
-        Schema::create('siswas', function (Blueprint $table) {
+        Schema::create('tb_siswa', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('id_user')->unsigned()->nullable(true);
-            $table->foreign('id_user')->references('id')->on('users');
+            $table->foreign('id_user')->references('id')->on('tb_user');
             $table->string('nama');
-            $table->string('alamat');
-            $table->date('tanggal');
-            $table->text('kelas');
-            $table->text('no_hp');
+            $table->string('alamat')->nullable(true);
+            $table->date('tanggal')->nullable(true);
+            $table->text('kelas')->nullable(true);
+            $table->text('no_hp')->nullable(true);
             $table->timestamps();
         });
     }
@@ -33,6 +33,6 @@ class CreateSiswasTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('siswas');
+        Schema::dropIfExists('tb_siswa');
     }
 }
