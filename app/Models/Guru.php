@@ -8,9 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Guru extends Model
 {
     use HasFactory;
+    protected $table = 'tb_guru';
+
     protected $fillable = [
         'id_user',
         'alamat',
+        'nama',
         'tanggal'
     ];
 }

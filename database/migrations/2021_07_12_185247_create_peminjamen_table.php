@@ -20,7 +20,7 @@ class CreatePeminjamenTable extends Migration
             $table->bigInteger('id_barang')->unsigned()->nullable(true);
             $table->foreign('id_barang')->references('id')->on('tb_barang');
             $table->integer('qty');
-            $table->tinyInteger('status');
+            $table->tinyInteger('status')->default(0);
             $table->bigInteger('id_guru')->unsigned()->nullable(true);
             $table->foreign('id_guru')->references('id')->on('tb_guru');
             $table->timestamps();

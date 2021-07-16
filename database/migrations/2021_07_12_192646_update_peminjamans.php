@@ -17,6 +17,8 @@ class UpdatePeminjamans extends Migration
         Schema::table('tb_pinjam', function (Blueprint $table) {
             $table->bigInteger('id_staf')->unsigned()->nullable(true);
             $table->foreign('id_staf')->references('id')->on('tb_staf');
+            $table->date('tanggal_pinjam');
+            $table->date('tanggal_kembali')->nullable(true);
         });
     }
 

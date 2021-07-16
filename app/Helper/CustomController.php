@@ -56,7 +56,7 @@ class CustomController extends DatatableController
         return $model->save() ? $model : false;
     }
 
-    public function update($class = null, $data = [])
+    public function updateData($class = null, $data = [])
     {
         $id    = $this->request->request->get('id');
         $model = $class::find($id);

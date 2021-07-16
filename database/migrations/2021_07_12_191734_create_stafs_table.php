@@ -16,7 +16,7 @@ class CreateStafsTable extends Migration
         Schema::create('tb_staf', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('id_user')->unsigned()->nullable(true);
-            $table->foreign('id_user')->references('id')->on('tb_user');
+            $table->foreign('id_user')->references('id')->on('users');
             $table->string('nama');
             $table->string('alamat')->nullable(true);
             $table->date('tanggal')->nullable(true);

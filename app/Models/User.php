@@ -18,10 +18,10 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name',
         'username',
         'password',
-        'roles'
+        'roles',
+        'token'
     ];
 
     /**
@@ -32,6 +32,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'token'
     ];
 
     /**
@@ -42,4 +43,25 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function getSiswa(){
+        return $this->hasOne(Siswa::class,'id_user');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function getStaf(){
+        return $this->hasOne(Staf::class,'id_user');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function getGuru(){
+        return $this->hasOne(Guru::class,'id_user');
+    }
 }

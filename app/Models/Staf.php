@@ -8,10 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Staf extends Model
 {
     use HasFactory;
+    protected $table = 'tb_staf';
 
     protected $fillable = [
         'id_user',
         'alamat',
-        'tanggal'
+        'tanggal',
+        'nama'
     ];
 }

@@ -2,6 +2,11 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BarangController;
+use App\Http\Controllers\MapelController;
+use App\Http\Controllers\MapelGuruController;
+use App\Http\Controllers\PeminjamanSiswaController;
+use App\Http\Controllers\PinjamGuruController;
+use App\Http\Controllers\SiswaController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -17,17 +22,29 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post('/register',[AuthController::class,'register']);
+Route::post('/login',[AuthController::class,'login']);
 
 Route::get('/barang', [BarangController::class, 'getAllProduct']);
 Route::get('/barang/{id}', [BarangController::class, 'getProductById']);
 Route::get('/barang/cari/{name}', [BarangController::class, 'getProductByName']);
 
-Route::post('/barang/tambah', [BarangController::class, 'createProduct']);
-Route::match(['put','patch'],'/barang/{id}', [BarangController::class, 'getProductById']);
+Route::post('/barang', [BarangController::class, 'apiCreateProduct']);
+Route::match(['put','patch'],'/barang/{id}', [BarangController::class, 'updateProduct']);
 Route::delete('/barang/{id}', [BarangController::class, 'destroy']);
 
 //Route::resource('barang',BarangController::class);
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+Route::resource('mapel', MapelController::class);
+Route::resource('mapel-guru', MapelGuruController::class);
+
+Route::group(['middleware' => ['auth:sanctum']], function (){
+    Route::post('/logout',[AuthController::class,'logout']);
+    Route::resource('siswa', SiswaController::class);
+    Route::resource('pinjam', PeminjamanSiswaController::class);
+    Route::resource('/pinjam-guru', PinjamGuruController::class);
+
 });

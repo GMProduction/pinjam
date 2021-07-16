@@ -16,6 +16,8 @@ class CreateMapelsTable extends Migration
         Schema::create('tb_mapel', function (Blueprint $table) {
             $table->id();
             $table->string('nama_mapel');
+            $table->bigInteger('id_guru')->unsigned()->nullable(true);
+            $table->foreign('id_guru')->references('id')->on('tb_guru');
             $table->timestamps();
         });
     }
