@@ -21,16 +21,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('/register',[AuthController::class,'register']);
 Route::post('/login',[AuthController::class,'login']);
 
 Route::get('/barang', [BarangController::class, 'getAllProduct']);
 Route::get('/barang/{id}', [BarangController::class, 'getProductById']);
 Route::get('/barang/cari/{name}', [BarangController::class, 'getProductByName']);
 
-Route::post('/barang', [BarangController::class, 'apiCreateProduct']);
-Route::match(['put','patch'],'/barang/{id}', [BarangController::class, 'updateProduct']);
-Route::delete('/barang/{id}', [BarangController::class, 'destroy']);
 
 //Route::resource('barang',BarangController::class);
 

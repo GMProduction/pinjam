@@ -26,6 +26,14 @@ class BarangController extends CustomController
     }
 
     /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function index(){
+        $barang = $this->getAllProduct();
+        return view('test')->with(['barang' => $barang]);
+    }
+
+    /**
      * @param $id
      *
      * @return mixed
