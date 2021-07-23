@@ -20,7 +20,8 @@ class BarangController extends CustomController
         $uri = $_SERVER['REQUEST_URI'];
         $barang = Barang::all();
         if ($uri && strpos($uri, 'api')){
-            return $this->jsonResponse($barang);
+            $response = $barang->take(4);
+            return $this->jsonResponse($response);
         }
         return $barang;
     }
@@ -50,12 +51,9 @@ class BarangController extends CustomController
         return $barang;
     }
 
-    /**
-     * @param $name
-     *
-     * @return mixed
-     */
-    public function getProductByName($name){
+
+    public function getProductByName(Request $request){
+        $name = $request->query->get('name');
         return Barang::where('nama_barang','like','%'.$name.'%')->get();
     }
 
