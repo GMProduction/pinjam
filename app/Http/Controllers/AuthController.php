@@ -23,7 +23,7 @@ class AuthController extends Controller
                 'password' => 'required|string|confirmed',
             ]
         );
-        $user = \App\Models\User::create(
+        $user  = \App\Models\User::create(
             [
                 'username' => $field['username'],
                 'password' => Hash::make($field['password']),
@@ -35,67 +35,89 @@ class AuthController extends Controller
             'user' => $user,
         ];
 
-        $model    = 'Staf';
+        $model = 'Staf';
 
         if ( ! $r->get('roles')) {
             $model    = 'Siswa';
             $token    = $user->createToken('appsiswa')->plainTextToken;
             $response = Arr::add($response, 'token', $token);
-            $us = \App\Models\User::find($user->id);
-            $us->update([
-                'token' => $token
-            ]);
-        }elseif ($r->get('roles') === 'guru'){
+            $us       = \App\Models\User::find($user->id);
+            $us->update(
+                [
+                    'token' => $token,
+                ]
+            );
+        } elseif ($r->get('roles') === 'guru') {
             $model    = 'Guru';
             $token    = $user->createToken('appguru')->plainTextToken;
             $response = Arr::add($response, 'token', $token);
-            $us = \App\Models\User::find($user->id);
-            $us->update([
-                'token' => $token
-            ]);
+            $us       = \App\Models\User::find($user->id);
+            $us->update(
+                [
+                    'token' => $token,
+                ]
+            );
         }
 
         $models = '\\App\\Models\\'.$model;
-        $member  = $models::create(
+        $member = $models::create(
             [
                 'id_user' => $user->id,
-                'nama'     => $r->get('name')
+                'nama'    => $r->get('name'),
             ]
         );
 
         $response = Arr::add($response, 'member', $member);
+
 //        array_push($response,$model);
         return $response;
 
     }
 
+    public function login(Request $r)
+    {
 
-    public function login(Request $r){
 
-
-        $field = $r->validate([
-            'username' => 'required|string',
-            'password' => 'required|string'
-        ]);
+        $field = $r->validate(
+            [
+                'username' => 'required|string',
+                'password' => 'required|string',
+            ]
+        );
 
         $user = \App\Models\User::where('username', $field['username'])->first();
 
-        if (! $user || ! Hash::check($field['password'], $user->password)) {
-            throw ValidationException::withMessages([
-                'email' => ['The provided credentials are incorrect.'],
-            ]);
+        if ( ! $user || ! Hash::check($field['password'], $user->password)) {
+//            throw ValidationException::withMessages([
+//                'username' => ['The provided credentials are incorrect.'],
+//            ]);
+            return response()->json(
+                [
+                    'status' => 401,
+                    'msg'    => 'Login gagal',
+                ]
+            );
         }
         $uri = $_SERVER['REQUEST_URI'];
-        if(strpos($uri, 'api')){
+        if (strpos($uri, 'api')) {
 
             $user->tokens()->delete();
             $token = $user->createToken('app'.$user->roles)->plainTextToken;
-            $user->update([
-                'token' => $token
-            ]);
-            return $token;
+            $user->update(
+                [
+                    'token' => $token,
+                ]
+            );
 
-        }else{
+//            return ;
+            return response()->json(
+                [
+                    'status' => 200,
+                    'msg'    => $token,
+                ]
+            );
+
+        } else {
             return '';
         }
     }
@@ -108,12 +130,15 @@ class AuthController extends Controller
     public function logout(Request $r)
     {
         $us = \App\Models\User::find(Auth::user()->id);
-        $us->update([
-            'token' => null
-        ]);
+        $us->update(
+            [
+                'token' => null,
+            ]
+        );
         Auth::user()->tokens()->delete();
+
         return [
-            'message' => 'loged out'
+            'message' => 'loged out',
         ];
     }
 }

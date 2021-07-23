@@ -26,8 +26,8 @@ Route::post('/login',[AuthController::class,'login']);
 
 Route::post('/register',[AuthController::class,'register']);
 Route::get('/barang', [BarangController::class, 'getAllProduct']);
-//Route::get('/barang/{id}', [BarangController::class, 'getProductById']);
-Route::get('/barang/cari', [BarangController::class, 'getProductByName']);
+Route::get('/barang/{id}', [BarangController::class, 'getProductById']);
+Route::get('/barang/cari/nama', [BarangController::class, 'getProductByName']);
 
 
 //Route::resource('barang',BarangController::class);
