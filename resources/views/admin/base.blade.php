@@ -19,9 +19,12 @@
     <link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap.min.css') }}" type="text/css">
     <link rel="stylesheet" href="{{ asset('css/myStyle.css') }}" type="text/css">
     <link rel="stylesheet" href="{{ asset('css/sidebar.css') }}" type="text/css">
-
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link href="https://cdn.jsdelivr.net/npm/boxicons@2.0.5/css/boxicons.min.css" rel="stylesheet" />
     <!-- custom css -->
+
+    <script src="{{ asset('js/swal.js') }}"></script>
+
 </head>
 
 <body>
@@ -32,7 +35,7 @@
                 Nama Admin
             </a>
 
-            <a href="/login">
+            <a href="/admin/barang">
                 <li href="#" class="nav-link t-white">
                     <i class="bx bxs-dashboard"></i>
                     <span class="mx-2">Master Barang</span>
@@ -43,12 +46,21 @@
             <a href="/login">
                 <li href="#" class="nav-link t-white">
                     <i class="bx bxs-dashboard"></i>
-                    <span class="mx-2">Data User</span>
+                    <span class="mx-2">Data Guru</span>
                 </li>
 
             </a>
 
 
+             <a href="/login">
+                <li href="#" class="nav-link t-white">
+                    <i class="bx bxs-dashboard"></i>
+                    <span class="mx-2">Data Guru</span>
+                </li>
+
+            </a>
+
+            
             <a href="/login">
                 <li href="#" class="nav-link t-white">
                     <i class="bx bxs-dashboard"></i>
@@ -81,13 +93,14 @@
     </div>
 
     <!-- Main Wrapper -->
-    <div class="p-1 my-container active-cont">
+    <div class="p-1 my-container active-cont ">
         <!-- Top Nav -->
-        <nav class="navbar top-navbar navbar-light bg-light px-5">
+        <nav class="navbar top-navbar navbar-light b-white px-5 " style="z-index: 10">
             <a class="btn border-0" id="menu-btn"><i class="bx bx-menu"></i></a>
+            <a >@yield('title')</a>
         </nav>
         <!--End Top Nav -->
-        <div class="content-wrapper">
+        <div class="content-wrapper bg-light p-2" style="height: 100vh;">
             @yield('content')
         </div>
     </div>
@@ -97,6 +110,8 @@
     <script src="{{ asset('bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('js/myStyle.js') }}"></script>
     <script src="{{ asset('js/sidebar.js') }}"></script>
+       <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    @yield('script')
 </body>
 
 </html>

@@ -14,7 +14,7 @@
     height: 100%;
     position: fixed;
     margin-left: -300px;
-    background-color: #100901;
+    background-color: #272C32;
     transition: 0.5s;
   }
   
@@ -38,7 +38,7 @@
   }
   
   #menu-btn {
-    background-color: #100901;
+    background-color: #272C32;
     color: #fff;
     margin-left: -62px;
   }
