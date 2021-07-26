@@ -43,7 +43,7 @@
             </a>
 
 
-            <a href="/login">
+            <a href="/admin/guru">
                 <li href="#" class="nav-link t-white">
                     <i class="bx bxs-dashboard"></i>
                     <span class="mx-2">Data Guru</span>
@@ -52,21 +52,11 @@
             </a>
 
 
-             <a href="/login">
+             <a href="/admin/siswa">
                 <li href="#" class="nav-link t-white">
                     <i class="bx bxs-dashboard"></i>
-                    <span class="mx-2">Data Guru</span>
+                    <span class="mx-2">Data Siswa</span>
                 </li>
-
-            </a>
-
-            
-            <a href="/login">
-                <li href="#" class="nav-link t-white">
-                    <i class="bx bxs-dashboard"></i>
-                    <span class="mx-2">Data Peminjam</span>
-                </li>
-
 
             </a>
 
