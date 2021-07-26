@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
@@ -77,49 +78,61 @@ class AuthController extends Controller
     public function login(Request $r)
     {
 
+        if ($r->isMethod('POST')){
+            $field = $r->validate(
+                [
+                    'username' => 'required|string',
+                    'password' => 'required|string',
+                ]
+            );
 
-        $field = $r->validate(
-            [
-                'username' => 'required|string',
-                'password' => 'required|string',
-            ]
-        );
+            $user = \App\Models\User::where('username', $field['username'])->first();
+            $uri = $_SERVER['REQUEST_URI'];
 
-        $user = \App\Models\User::where('username', $field['username'])->first();
-
-        if ( ! $user || ! Hash::check($field['password'], $user->password)) {
+            if ( ! $user || ! Hash::check($field['password'], $user->password)) {
 //            throw ValidationException::withMessages([
 //                'username' => ['The provided credentials are incorrect.'],
 //            ]);
-            return response()->json(
-                [
-                    'status' => 401,
-                    'msg'    => 'Login gagal',
-                ]
-            );
-        }
-        $uri = $_SERVER['REQUEST_URI'];
-        if (strpos($uri, 'api')) {
+                if (strpos($uri, 'api')) {
+                    return response()->json(
+                        [
+                            'status' => 401,
+                            'msg'    => 'Login gagal',
+                        ]
+                    );
+                }else{
+                    $data = [
+                        'msg' => 'Login gagal'
+                    ];
+                    return Redirect::back()->withErrors($data);
 
-            $user->tokens()->delete();
-            $token = $user->createToken('app'.$user->roles)->plainTextToken;
-            $user->update(
-                [
-                    'token' => $token,
-                ]
-            );
+                }
+            }
+            if (strpos($uri, 'api')) {
+
+                $user->tokens()->delete();
+                $token = $user->createToken('app'.$user->roles)->plainTextToken;
+                $user->update(
+                    [
+                        'token' => $token,
+                    ]
+                );
 
 //            return ;
-            return response()->json(
-                [
-                    'status' => 200,
-                    'msg'    => $token,
-                ]
-            );
+                return response()->json(
+                    [
+                        'status' => 200,
+                        'msg'    => $token,
+                    ]
+                );
 
-        } else {
-            return '';
+            } else {
+                return view('admin.dashboard');
+            }
         }
+
+        return view('login');
+
     }
 
     /**

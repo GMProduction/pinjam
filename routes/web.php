@@ -15,32 +15,44 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get(
+    '/',
+    function () {
+        return view('welcome');
+    }
+);
 
-Route::get('/login', function () {
-    return view('login');
-});
+Route::match(['post', 'get'], '/login', [AuthController::class, 'login']);
+Route::post('/register', [AuthController::class, 'register']);
 
-Route::get('/admin', function () {
-    return view('admin/dashboard');
-});
+Route::prefix('/admin')->group(
+    function () {
+        Route::get(
+            '/',
+            function () {
+                return view('admin/dashboard');
+            }
+        );
 
-Route::get('/admin/barang', function () {
-    return view('admin/barang/barang');
-});
+        Route::prefix('/barang')->group(function (){
+            Route::match(['post','get'],'/', [BarangController::class, 'viewAllBarang']);
+            Route::post('/delete/{id}', [BarangController::class, 'destroy']);
+        });
 
-Route::get('/admin/guru', function () {
-    return view('admin/guru/guru');
-});
+        Route::get(
+            '/guru',
+            function () {
+                return view('admin/guru/guru');
+            }
+        );
 
-Route::get('/admin/siswa', function () {
-    return view('admin/siswa/siswa');
-});
+        Route::get(
+            '/siswa',
+            function () {
+                return view('admin/siswa/siswa');
+            }
+        );
+    }
+);
 
 
-Route::post('/register',[AuthController::class,'register']);
-
-Route::get('/barang', [BarangController::class, 'index']);
-Route::post('/barang', [BarangController::class, 'createProduct']);

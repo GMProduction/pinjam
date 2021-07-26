@@ -18,7 +18,8 @@ class Peminjaman extends Model
         'id_guru',
         'id_staf',
         'tanggal_pinjam',
-        'tanggal_kembali'
+        'tanggal_kembali',
+        'id_mapel'
     ];
 
     /**

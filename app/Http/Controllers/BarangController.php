@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Helper\CustomController;
 use App\Models\Barang;
 use App\Models\Peminjaman;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -16,21 +17,33 @@ class BarangController extends CustomController
     /**
      * @return Barang[]|Collection|JsonResponse
      */
-    public function getAllProduct(){
-        $uri = $_SERVER['REQUEST_URI'];
-        $barang = Barang::all();
-        if ($uri && strpos($uri, 'api')){
-            $response = $barang->take(4);
-            return $this->jsonResponse($response);
+    public function getAllProduct()
+    {
+        $uri        = $_SERVER['REQUEST_URI'];
+        $barang     = Barang::all();
+        $dataBarang = [];
+        foreach ($barang as $bar) {
+            $keluar       = Peminjaman::where([['id_barang', '=', $bar->id], ['status', '=', 2]])->sum('qty');
+            $stok         = (int)$bar->qty - (int)$keluar;
+            $dataBarang[] = Arr::add($bar, 'stok', $stok);
+
         }
-        return $barang;
+        if ($uri && strpos($uri, 'api')) {
+            $response = $barang->take(4);
+
+            return $this->jsonResponse($dataBarang);
+        }
+
+        return $dataBarang;
     }
 
     /**
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @return \Illuminate\Contracts\Foundation\Application|Factory|\Illuminate\Contracts\View\View
      */
-    public function index(){
+    public function index()
+    {
         $barang = $this->getAllProduct();
+
         return view('test')->with(['barang' => $barang]);
     }
 
@@ -39,22 +52,24 @@ class BarangController extends CustomController
      *
      * @return mixed
      */
-    public function getProductById($id){
-        $barang =  Barang::find($id);
+    public function getProductById($id)
+    {
+        $barang = Barang::find($id);
 
-        $keluar = Peminjaman::where([['id_barang','=',$id],['status','=',2]])->sum('qty');
+        $keluar = Peminjaman::where([['id_barang', '=', $id], ['status', '=', 2]])->sum('qty');
 
-        $stok = (int) $barang->qty - (int) $keluar;
+        $stok = (int)$barang->qty - (int)$keluar;
 
-        $barang = Arr::add($barang, 'stok',$stok);
+        $barang = Arr::add($barang, 'stok', $stok);
 
         return $barang;
     }
 
-
-    public function getProductByName(Request $request){
+    public function getProductByName(Request $request)
+    {
         $name = $request->query->get('name');
-        return Barang::where('nama_barang','like','%'.$name.'%')->get();
+
+        return Barang::where('nama_barang', 'like', '%'.$name.'%')->get();
     }
 
     /**
@@ -62,11 +77,14 @@ class BarangController extends CustomController
      *
      * @return mixed
      */
-    public function createProduct(){
-       $this->request->validate([
-            'nama_barang' => 'required|string',
-            'qty' => 'required|int'
-        ]);
+    public function createProduct()
+    {
+        $this->request->validate(
+            [
+                'nama_barang' => 'required|string',
+                'qty'         => 'required|int',
+            ]
+        );
 
         return Barang::create($this->request->all());
     }
@@ -74,16 +92,18 @@ class BarangController extends CustomController
     /**
      * @return JsonResponse
      */
-    public function apiCreateProduct(){
+    public function apiCreateProduct()
+    {
         try {
-            $barang = $this->createProduct();
-            $code = 200;
+            $barang   = $this->createProduct();
+            $code     = 200;
             $response = $barang;
-        }catch (\Illuminate\Validation\ValidationException $err){
-            $code = 500;
-            $response = $err->errors() ?? $err->getMessage();
+        } catch (\Illuminate\Validation\ValidationException $err) {
+            $code     = 500;
+            $response = $err->errors() || $err->getMessage();
         }
-        return $this->jsonResponse($response,$code);
+
+        return $this->jsonResponse($response, $code);
     }
 
     /**
@@ -92,9 +112,11 @@ class BarangController extends CustomController
      *
      * @return mixed
      */
-    public function updateProduct(Request $r, $id){
+    public function updateProduct(Request $r, $id)
+    {
         $barang = Barang::find($id);
         $barang->update($r->all());
+
         return $barang;
     }
 
@@ -103,13 +125,38 @@ class BarangController extends CustomController
      *
      * @return int
      */
-    public function destroy($id){
-        $del =  Barang::destroy($id);
+    public function destroy($id)
+    {
+        $del      = Barang::destroy($id);
         $response = 'Gagal hapus data';
-        if ($del > 0){
+        if ($del > 0) {
             $response = 'Berhasil hapus data';
         }
+
         return $response;
+    }
+
+    /**
+     * @return Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function viewAllBarang()
+    {
+        $barang  = [
+            'barang' => $this->getAllProduct()
+        ];
+        if ($this->request->isMethod('POST')) {
+            $this->request->validate(
+                [
+                    'nama_barang' => 'required|string',
+                    'qty'         => 'required|int',
+                ]
+            );
+            $data = Barang::create($this->request->all());
+
+            return redirect('/admin/barang');
+        }
+
+        return view('admin.barang.barang')->with($barang);
     }
 
 }

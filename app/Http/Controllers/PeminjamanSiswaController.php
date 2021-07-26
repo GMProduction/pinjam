@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helper\CustomController;
 use App\Models\Barang;
+use App\Models\Mapel;
 use App\Models\Peminjaman;
 use App\Models\Siswa;
 use App\Models\Staf;
@@ -23,7 +24,7 @@ class PeminjamanSiswaController extends CustomController
     public function index()
     {
         //
-        $pinjam = Peminjaman::with(['getSiswa', 'getBarang','getMapel.getGuru', 'getGuru', 'getStaf'])->find(Auth::id());
+        $pinjam = Peminjaman::with(['getSiswa', 'getBarang', 'getMapel.getGuru', 'getGuru', 'getStaf'])->find(Auth::id());
 
         return $pinjam;
     }
@@ -38,18 +39,26 @@ class PeminjamanSiswaController extends CustomController
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function store()
     {
         $barang = Barang::find($this->request->get('id_barang'));
         if ( ! $barang) {
-            return 'tidak ada barang';
+            return response()->json(
+                [
+                    'status' => 204,
+                    'msg'    => 'Tidak ada barang',
+                ]
+            );
+        }
+
+        $mapel = Mapel::find($this->request->get('id_mapel'));
+        if ( ! $mapel) {
+            return response()->json(
+                [
+                    'status' => 204,
+                    'msg'    => 'Tidak ada Mapel',
+                ]
+            );
         }
 
         $this->request->validate(
@@ -65,6 +74,7 @@ class PeminjamanSiswaController extends CustomController
                 'qty'            => $this->request->get('qty'),
                 'id_barang'      => $barang->id,
                 'tanggal_pinjam' => $this->request->get('tanggal_pinjam'),
+                'id_mapel'       => $mapel->id,
             ]
         );
 
