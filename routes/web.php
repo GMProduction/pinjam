@@ -39,6 +39,14 @@ Route::get('/admin/siswa', function () {
     return view('admin/siswa/siswa');
 });
 
+Route::get('/admin/mapel', function () {
+    return view('admin/mapel/mapel');
+});
+
+Route::get('/admin/laporanpinjaman', function () {
+    return view('admin/laporan/pinjamalat');
+});
+
 
 Route::post('/register',[AuthController::class,'register']);
 

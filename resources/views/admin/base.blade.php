@@ -32,12 +32,21 @@
     <div class="side-navbar active-nav d-flex justify-content-between  flex-wrap flex-column" id="sidebar">
         <ul class="nav flex-column text-white w-100 h-100">
             <a href="#" class="nav-link h3 text-white my-2">
-                Nama Admin
+                SMK 5
+            </a>
+
+
+            
+            <a href="/admin">
+                <li href="#" class="nav-link t-white">
+                    <i class="bx bxs-dashboard"></i>
+                    <span class="mx-2">Dashboard</span>
+                </li>
             </a>
 
             <a href="/admin/barang">
                 <li href="#" class="nav-link t-white">
-                    <i class="bx bxs-dashboard"></i>
+                    <i class="bx bxs-cube"></i>
                     <span class="mx-2">Master Barang</span>
                 </li>
             </a>
@@ -45,34 +54,41 @@
 
             <a href="/admin/guru">
                 <li href="#" class="nav-link t-white">
-                    <i class="bx bxs-dashboard"></i>
+                    <i class="bx bxs-group"></i>
                     <span class="mx-2">Data Guru</span>
                 </li>
 
             </a>
 
 
-             <a href="/admin/siswa">
+            <a href="/admin/siswa">
                 <li href="#" class="nav-link t-white">
-                    <i class="bx bxs-dashboard"></i>
+                    <i class="bx bxs-happy-beaming"></i>
                     <span class="mx-2">Data Siswa</span>
                 </li>
 
             </a>
 
-
-            <a href="/login" class="mb-auto" >
+            <a href="/admin/mapel">
                 <li href="#" class="nav-link t-white">
-                    <i class="bx bx-user-check"></i>
-                    <span class="mx-2">Laporan Peminjam</span>
+                    <i class="bx bxs-book-bookmark"></i>
+                    <span class="mx-2">Data Mapel</span>
                 </li>
 
             </a>
 
 
-            <a href="/login">
+            <a href="/admin/laporanpinjaman" class="mb-auto">
                 <li href="#" class="nav-link t-white">
-                    <i class="bx bx-user-check"></i>
+                    <i class="bx bx-file"></i>
+                    <span class="mx-2">Laporan Peminjam</span>
+                </li>
+            </a>
+
+
+            <a href="/logout">
+                <li href="#" class="nav-link t-white">
+                    <i class="bx bx-link-external"></i>
                     <span class="mx-2">Logout</span>
                 </li>
 
@@ -87,7 +103,7 @@
         <!-- Top Nav -->
         <nav class="navbar top-navbar navbar-light b-white px-5 " style="z-index: 10">
             <a class="btn border-0" id="menu-btn"><i class="bx bx-menu"></i></a>
-            <a >@yield('title')</a>
+            <a>@yield('title')</a>
         </nav>
         <!--End Top Nav -->
         <div class="content-wrapper bg-light p-2" style="height: 100vh;">
@@ -100,7 +116,7 @@
     <script src="{{ asset('bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('js/myStyle.js') }}"></script>
     <script src="{{ asset('js/sidebar.js') }}"></script>
-       <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     @yield('script')
 </body>
 
