@@ -35,6 +35,11 @@ Route::get('/admin/guru', function () {
     return view('admin/guru/guru');
 });
 
+Route::get('/admin/siswa', function () {
+    return view('admin/siswa/siswa');
+});
+
+
 Route::post('/register',[AuthController::class,'register']);
 
 Route::get('/barang', [BarangController::class, 'index']);

@@ -1,7 +1,7 @@
 @extends('admin.base')
 
 @section('title')
-    Data Guru
+    Data Siswa
 @endsection
 
 @section('content')
@@ -18,9 +18,9 @@
 
 
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5>Data Guru</h5>
+                <h5>Data Siswa</h5>
                 <button type="button ms-auto" class="btn btn-primary btn-sm" data-bs-toggle="modal"
-                    data-bs-target="#tambahguru">Tambah Data Guru</button>
+                    data-bs-target="#tambahsiswa">Tambah Data Siswa</button>
             </div>
 
 
@@ -30,14 +30,23 @@
                         #
                     </th>
                     <th>
-                        nama Guru
+                        nama Siswa
                     </th>
                     <th>
                         Alamat
                     </th>
 
                     <th>
-                        TTL
+                        Tanggal Lahir
+                    </th>
+
+
+                    <th>
+                        Kelas
+                    </th>
+
+                    <th>
+                        No_hp
                     </th>
 
                     <th>
@@ -58,9 +67,18 @@
                     </td>
                     <td>
                         23 Maret 1994
+                    </td>
+                    <td>
+                        XII A
+                    </td>
+
+                    <td>
+                        08787845457
+                    </td>
+
                     <td>
                         <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal"
-                            data-bs-target="#editguru">Ubah</button>
+                            data-bs-target="#editsiswa">Ubah</button>
                         <button type="button" class="btn btn-danger btn-sm" onclick="hapus('id', 'nama') ">hapus</button>
                     </td>
                 </tr>
@@ -74,11 +92,11 @@
 
 
             <!-- Modal Tambah-->
-            <div class="modal  fade" id="tambahguru" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal  fade" id="tambahsiswa" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-md">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Tambah Guru</h5>
+                            <h5 class="modal-title" id="exampleModalLabel">Tambah Siswa</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
@@ -86,21 +104,30 @@
 
 
                                 <div class="mb-3">
-                                    <label for="namaguru" class="form-label">Nama Guru</label>
-                                    <input type="text" class="form-control" id="namaguru">
+                                    <label for="namasiswa" class="form-label">Nama Siswa</label>
+                                    <input type="text" class="form-control" id="namasiswa">
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="alamatguru" class="form-label">Alamat</label>
-                                    <input type="text" class="form-control" id="alamatguru">
+                                    <label for="alamatsiswa" class="form-label">Alamat</label>
+                                    <input type="text" class="form-control" id="alamatsiswa">
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="ttlguru" class="form-label">Tanggal Lahir</label>
-                                    <input type="text"  class="form-control" id="datepicker">
+                                    <label for="ttlsiswa" class="form-label">Tanggal Lahir</label>
+                                    <input type="text" class="form-control" id="datepicker">
                                 </div>
-    
-    
+
+                                <div class="mb-3">
+                                    <label for="kelassiswa" class="form-label">Kelas</label>
+                                    <input type="text" class="form-control" id="kelassiswa">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="nohpsiswa" class="form-label">No Hp</label>
+                                    <input type="text" class="form-control" id="nohpsiswa">
+                                </div>
+
                                 <div class="mb-3">
                                     <label for="username" class="form-label">Username</label>
                                     <input type="text" class="form-control" id="username">
@@ -129,11 +156,11 @@
             </div>
 
             <!-- Modal Edit-->
-            <div class="modal  fade" id="editguru" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal  fade" id="editsiswa" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-md">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Edit Guru</h5>
+                            <h5 class="modal-title" id="exampleModalLabel">Tambah Siswa</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
@@ -141,21 +168,30 @@
 
 
                                 <div class="mb-3">
-                                    <label for="editnamaguru" class="form-label">Nama Guru</label>
-                                    <input type="text" class="form-control" id="editnamaguru">
+                                    <label for="editnamasiswa" class="form-label">Nama Siswa</label>
+                                    <input type="text" class="form-control" id="editnamasiswa">
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="editalamatguru" class="form-label">Alamat</label>
-                                    <input type="text" class="form-control" id="editalamatguru">
+                                    <label for="editalamatsiswa" class="form-label">Alamat</label>
+                                    <input type="text" class="form-control" id="editalamatsiswa">
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="editttlguru" class="form-label">Tanggal Lahir</label>
-                                    <input type="text"  class="form-control" id="editttlguru">
+                                    <label for="editttlsiswa" class="form-label">Tanggal Lahir</label>
+                                    <input type="text" class="form-control" id="editdatepicker">
                                 </div>
-    
-    
+
+                                <div class="mb-3">
+                                    <label for="editkelassiswa" class="form-label">Kelas</label>
+                                    <input type="text" class="form-control" id="editkelassiswa">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="editnohpsiswa" class="form-label">No Hp</label>
+                                    <input type="text" class="form-control" id="editnohpsiswa">
+                                </div>
+
                                 <div class="mb-3">
                                     <label for="editusername" class="form-label">Username</label>
                                     <input type="text" class="form-control" id="editusername">
@@ -214,8 +250,8 @@
         }
     </script>
     <script>
-        $( function() {
-          $( "#datepicker" ).datepicker();
-        } );
-        </script>
+        $(function() {
+            $("#datepicker").datepicker();
+        });
+    </script>
 @endsection
