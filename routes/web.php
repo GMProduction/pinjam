@@ -56,3 +56,35 @@ Route::prefix('/admin')->group(
 );
 
 
+<<<<<<< HEAD
+=======
+Route::get('/admin', function () {
+    return view('admin/dashboard');
+});
+
+Route::get('/admin/barang', function () {
+    return view('admin/barang/barang');
+});
+
+Route::get('/admin/guru', function () {
+    return view('admin/guru/guru');
+});
+
+Route::get('/admin/siswa', function () {
+    return view('admin/siswa/siswa');
+});
+
+Route::get('/admin/mapel', function () {
+    return view('admin/mapel/mapel');
+});
+
+Route::get('/admin/laporanpinjaman', function () {
+    return view('admin/laporan/pinjamalat');
+});
+
+
+Route::post('/register',[AuthController::class,'register']);
+
+Route::get('/barang', [BarangController::class, 'index']);
+Route::post('/barang', [BarangController::class, 'createProduct']);
+>>>>>>> 6663f5c521c0bc685818d0de23503544a6ee30a3

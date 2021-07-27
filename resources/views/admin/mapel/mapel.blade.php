@@ -1,7 +1,7 @@
 @extends('admin.base')
 
 @section('title')
-    Data Guru
+    Data Mapel
 @endsection
 
 @section('content')
@@ -18,9 +18,9 @@
 
 
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5>Data Guru</h5>
+                <h5>Data Mapel</h5>
                 <button type="button ms-auto" class="btn btn-primary btn-sm" data-bs-toggle="modal"
-                    data-bs-target="#tambahguru">Tambah Data Guru</button>
+                    data-bs-target="#tambahmapel">Tambah Data Mapel</button>
             </div>
 
 
@@ -30,14 +30,10 @@
                         #
                     </th>
                     <th>
-                        nama Guru
+                        nama Mapel
                     </th>
                     <th>
-                        Alamat
-                    </th>
-
-                    <th>
-                        TTL
+                        Guru
                     </th>
 
                     <th>
@@ -51,16 +47,15 @@
                         1
                     </td>
                     <td>
+                        Matematika
+                    </td>
+                    <td>
                         Erfin
                     </td>
-                    <td>
-                        Sukoharjo
-                    </td>
-                    <td>
-                        23 Maret 1994
+
                     <td>
                         <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal"
-                            data-bs-target="#editguru">Ubah</button>
+                            data-bs-target="#editmapel">Ubah</button>
                         <button type="button" class="btn btn-danger btn-sm" onclick="hapus('id', 'nama') ">hapus</button>
                     </td>
                 </tr>
@@ -70,12 +65,15 @@
         </div>
 
 
+        <div>
+
+
             <!-- Modal Tambah-->
-            <div class="modal  fade" id="tambahguru" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-md">
+            <div class="modal  fade" id="tambahmapel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-sm">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Tambah Guru</h5>
+                            <h5 class="modal-title" id="exampleModalLabel">Tambah Mapel</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
@@ -83,35 +81,19 @@
 
 
                                 <div class="mb-3">
-                                    <label for="namaguru" class="form-label">Nama Guru</label>
-                                    <input type="text" class="form-control" id="nama" name="nama">
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="alamatguru" class="form-label">Alamat</label>
-                                    <input type="text" class="form-control" id="alamat" name="alamat">
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="ttlguru" class="form-label">Tanggal Lahir</label>
-                                    <input type="text"  class="form-control" id="tanggal" name="tanggal">
+                                    <label for="namamapel" class="form-label">Nama Mapel</label>
+                                    <input type="text" class="form-control" id="namamapel">
                                 </div>
 
 
-                                <div class="mb-3">
-                                    <label for="username" class="form-label">Username</label>
-                                    <input type="text" class="form-control" id="username" name="username">
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="password" class="form-label">Password</label>
-                                    <input type="password" class="form-control" id="password" name="password">
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="konfirmasi" class="form-label">Konfirmasi Password</label>
-                                    <input type="password" class="form-control" id="konfirmasi" name="password_confirmation">
-                                </div>
+                                
+                                <a>Pilih Guru</a>
+                                <select class="form-select" aria-label="Default select example" name="idguru">
+                                    <option selected>Mata Pelajaran</option>
+                                    <option value="1">Erfin</option>
+                                    <option value="2">Joko A</option>
+                                    <option value="3">Joko B</option>
+                                </select>
 
                                 <div class="mb-4"></div>
                                 <button type="submit" class="btn btn-primary">Simpan</button>
@@ -122,7 +104,41 @@
                 </div>
             </div>
 
+            <!-- Modal Edit-->
+            <div class="modal  fade" id="editmapel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Tambah Mapel</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form>
 
+
+                                <div class="mb-3">
+                                    <label for="namamapel" class="form-label">Nama Mapel</label>
+                                    <input type="text" class="form-control" id="namamapel">
+                                </div>
+
+
+                                <a>Pilih Guru</a>
+                                <select class="form-select" aria-label="Default select example" name="idguru">
+                                    <option selected>Mata Pelajaran</option>
+                                    <option value="1">Erfin</option>
+                                    <option value="2">Joko A</option>
+                                    <option value="3">Joko B</option>
+                                </select>
+
+                                <div class="mb-4"></div>
+                                <button type="submit" class="btn btn-primary">Simpan</button>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </section>
 
@@ -154,8 +170,8 @@
         }
     </script>
     <script>
-        $( function() {
-          $( "#datepicker" ).datepicker();
-        } );
-        </script>
+        $(function() {
+            $("#datepicker").datepicker();
+        });
+    </script>
 @endsection
