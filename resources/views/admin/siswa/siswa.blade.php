@@ -80,7 +80,8 @@
                     </td>
 
                     <td>
-                        <a type="button" class="btn btn-success btn-sm"  id="editData">Ubah</a>
+                        <a type="button" class="btn btn-success btn-sm"  id="editData" data-id="{{$g->id}}" data-nama="{{$g->getSiswa->nama}}" data-alamat="{{$g->getSiswa->alamat}}"
+                           data-tanggal="{{$g->getSiswa->tanggal}}" data-kelas="{{$g->getSiswa->kelas}}" data-no-hp="{{$g->getSiswa->no_hp}}" data-username="{{$g->username}}">Ubah</a>
                         <button type="button" class="btn btn-danger btn-sm" onclick="hapus('id', 'nama') ">hapus</button>
                     </td>
                 </tr>
@@ -105,46 +106,46 @@
                         <div class="modal-body">
                             <form id="formRegister">
                                 @csrf
-                                <input name="id" id="id" value="">
+                                <input name="id" id="id" value="" hidden>
 
                                 <div class="mb-3">
                                     <label for="namasiswa" class="form-label">Nama Siswa</label>
-                                    <input type="text" class="form-control" id="nama" name="nama">
+                                    <input type="text" class="form-control" id="nama" name="nama" required>
                                 </div>
 
                                 <div class="mb-3">
                                     <label for="alamatsiswa" class="form-label">Alamat</label>
-                                    <input type="text" class="form-control" id="alamat" name="alamat">
+                                    <input type="text" class="form-control" id="alamat" name="alamat" required>
                                 </div>
 
                                 <div class="mb-3">
                                     <label for="ttlsiswa" class="form-label">Tanggal Lahir</label>
-                                    <input type="text" class="form-control" id="tanggal" name="tanggal">
+                                    <input type="date" class="form-control" id="tanggal" name="tanggal">
                                 </div>
 
                                 <div class="mb-3">
                                     <label for="kelassiswa" class="form-label">Kelas</label>
-                                    <input type="text" class="form-control" id="kelas" name="kelas">
+                                    <input type="text" class="form-control" id="kelas" name="kelas" required>
                                 </div>
 
                                 <div class="mb-3">
                                     <label for="nohpsiswa" class="form-label">No Hp</label>
-                                    <input type="text" class="form-control" id="nohpsiswa">
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="username" class="form-label">Username</label>
                                     <input type="text" class="form-control" id="no_hp" name="no_hp">
                                 </div>
 
                                 <div class="mb-3">
+                                    <label for="username" class="form-label">Username</label>
+                                    <input type="text" class="form-control" id="username" name="username" required>
+                                </div>
+
+                                <div class="mb-3">
                                     <label for="password" class="form-label">Password</label>
-                                    <input type="password" class="form-control" id="password" name="password">
+                                    <input type="password" class="form-control" id="password" name="password" required>
                                 </div>
 
                                 <div class="mb-3">
                                     <label for="konfirmasi" class="form-label">Konfirmasi Password</label>
-                                    <input type="password" class="form-control" id="password_confirmation" name="password_confirmation">
+                                    <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" required>
                                 </div>
 
                                 <div class="mb-4"></div>
@@ -174,6 +175,8 @@
             $('#formRegister #alamat').val('');
             $('#formRegister #tanggal').val('');
             $('#formRegister #username').val('');
+            $('#formRegister #kelas').val('');
+            $('#formRegister #no_hp').val('');
             $('#formRegister #password').val('');
             $('#formRegister #password_confirmation').val('');
             $('#tambahsiswa').modal('show');
@@ -181,9 +184,11 @@
 
         $(document).on('click', '#editData', function () {
             $('#formRegister #id').val($(this).data('id'));
-            $('#formRegister #nama').val($(this).data('name'));
+            $('#formRegister #nama').val($(this).data('nama'));
             $('#formRegister #alamat').val($(this).data('alamat'));
             $('#formRegister #tanggal').val($(this).data('tanggal'));
+            $('#formRegister #kelas').val($(this).data('kelas'));
+            $('#formRegister #no_hp').val($(this).data('no-hp'));
             $('#formRegister #username').val($(this).data('username'));
             $('#formRegister #password').val('*****');
             $('#formRegister #password_confirmation').val('*****');

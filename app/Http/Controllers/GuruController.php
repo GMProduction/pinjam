@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Guru;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -14,6 +15,14 @@ class GuruController extends Controller
     public function index(){
         $guru = User::with(['getGuru'])->where('roles','=','guru')->get();
         return view('admin.guru.guru')->with(['guru' => $guru]);
+    }
+
+    /**
+     * @return Guru[]|\Illuminate\Database\Eloquent\Collection
+     */
+    public function getGuru(){
+        $guru = Guru::all();
+        return $guru;
     }
 
     /**

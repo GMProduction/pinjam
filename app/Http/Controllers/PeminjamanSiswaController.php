@@ -20,17 +20,13 @@ class PeminjamanSiswaController extends CustomController
 {
 
     /**
-     * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function index()
     {
         //
-        $pinjam = Peminjaman::with(['getSiswa', 'getBarang', 'getMapel.getGuru', 'getGuru', 'getStaf'])
-                            ->whereHas('getSiswa', function ($query){
-                                return $query->where('id_user','=',Auth::id());
-                            })
-                            ->orderBy('created_at','desc')->get();
-        return $pinjam;
+        $pinjam = Peminjaman::with(['getSiswa', 'getBarang', 'getMapel.getGuru', 'getGuru', 'getStaf'])->orderBy('created_at','desc')->get();
+        return view('admin.laporan.pinjamalat')->with(['pinjam' => $pinjam]);
 
     }
 
@@ -106,6 +102,29 @@ class PeminjamanSiswaController extends CustomController
     }
 
     /**
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function konfirmasi(){
+
+        try {
+            $pinjam = Peminjaman::find($this->request->get('id'));
+            $staf = Staf::where('id_user','=',Auth::id())->first();
+            $pinjam->update([
+                'status' => $this->request->get('status'),
+            ]);
+            if ($this->request->get('status')){
+                $pinjam->update([
+                    'id_staf' =>$staf->id
+                ]);
+            }
+            return $this->jsonResponse(["msg" => 'Berhasil'], 200);
+
+        }catch (\Exception $er){
+           return $this->jsonResponse(["msg" => $er->getMessage()], 500);
+        }
+    }
+
+    /**
      * Show the form for editing the specified resource.
      *
      * @param int $id
@@ -115,6 +134,7 @@ class PeminjamanSiswaController extends CustomController
     public function edit($id)
     {
         //
+
     }
 
     /**

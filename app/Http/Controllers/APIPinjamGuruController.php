@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class PinjamGuruController extends CustomController
+class APIPinjamGuruController extends CustomController
 {
 
     /**

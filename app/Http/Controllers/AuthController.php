@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helper\CustomController;
 use App\Models\Siswa;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -11,7 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Validation\ValidationException;
 
-class AuthController extends Controller
+class AuthController extends CustomController
 {
     //
 
@@ -23,13 +24,14 @@ class AuthController extends Controller
             if ($username) {
                 return response()->json(
                     [
-                      "msg" => "The username has already been taken.",
-                    ],'201'
+                        "msg" => "The username has already been taken.",
+                    ],
+                    '201'
                 );
             }
             $field = $r->validate(
                 [
-                    'name'     => 'required|string',
+                    'nama'     => 'required|string',
                     'password' => 'required|string|confirmed',
                 ]
             );
@@ -50,7 +52,7 @@ class AuthController extends Controller
         } else {
             $field = $r->validate(
                 [
-                    'name'     => 'required|string',
+                    'nama'     => 'required|string',
                     'username' => 'required|string|unique:users,username',
                     'password' => 'required|string|confirmed',
                 ]
@@ -99,7 +101,7 @@ class AuthController extends Controller
                 $member = $models::where('id_user', '=', $user->id)->first();
                 $member->update(
                     [
-                        'nama'    => $r->get('name'),
+                        'nama'    => $r->get('nama'),
                         'alamat'  => $r->get('alamat'),
                         'tanggal' => $r->get('tanggal'),
                     ]
@@ -108,7 +110,7 @@ class AuthController extends Controller
                 $member = $models::create(
                     [
                         'id_user' => $user->id,
-                        'nama'    => $r->get('name'),
+                        'nama'    => $r->get('nama'),
                         'alamat'  => $r->get('alamat'),
                         'tanggal' => $r->get('tanggal'),
                     ]
@@ -119,7 +121,7 @@ class AuthController extends Controller
                 $member = $models::where('id_user', '=', $user->id)->first();
                 $member->update(
                     [
-                        'nama'    => $r->get('name'),
+                        'nama'    => $r->get('nama'),
                         'alamat'  => $r->get('alamat'),
                         'tanggal' => $r->get('tanggal'),
                         'kelas'   => $r->get('kelas'),
@@ -130,7 +132,7 @@ class AuthController extends Controller
                 $member = $models::create(
                     [
                         'id_user' => $user->id,
-                        'nama'    => $r->get('name'),
+                        'nama'    => $r->get('nama'),
                         'alamat'  => $r->get('alamat'),
                         'tanggal' => $r->get('tanggal'),
                         'kelas'   => $r->get('kelas'),
@@ -160,7 +162,6 @@ class AuthController extends Controller
 
             $user = User::where('username', $field['username'])->first();
             $uri  = $_SERVER['REQUEST_URI'];
-
             if ( ! $user || ! Hash::check($field['password'], $user->password)) {
 //            throw ValidationException::withMessages([
 //                'username' => ['The provided credentials are incorrect.'],
@@ -200,7 +201,7 @@ class AuthController extends Controller
                 );
 
             } else {
-                return view('admin.dashboard');
+//                return view('admin.dashboard');
             }
         }
 
@@ -226,5 +227,41 @@ class AuthController extends Controller
         return [
             'message' => 'loged out',
         ];
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function loginAdmin(Request $request)
+    {
+        if ($request->isMethod('POST')) {
+
+            $credentials = [
+                'username' => $request['username'],
+                'password' => $request['password'],
+            ];
+            if ($this->isAuth($credentials)) {
+                $redirect = '/admin';
+
+                return redirect($redirect);
+            }
+
+            return redirect()->back()->withInput()->with('failed', 'Periksa Kembali Username dan Password Anda');
+        }
+
+        return view('login');
+
+    }
+
+    /**
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function logoutAdmin()
+    {
+        Auth::logout();
+
+        return redirect('/');
     }
 }

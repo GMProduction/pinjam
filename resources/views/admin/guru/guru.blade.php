@@ -90,7 +90,7 @@
                             <input name="id" id="id" value="" hidden>
                             <div class="mb-3">
                                 <label for="namaguru" class="form-label">Nama Guru</label>
-                                <input type="text" class="form-control" id="nama" name="name" required>
+                                <input type="text" class="form-control" id="nama" name="nama" required>
                             </div>
 
                             <div class="mb-3">

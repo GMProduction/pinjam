@@ -3,6 +3,8 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BarangController;
 use App\Http\Controllers\GuruController;
+use App\Http\Controllers\MapelController;
+use App\Http\Controllers\PeminjamanSiswaController;
 use App\Http\Controllers\SiswaController;
 use Illuminate\Support\Facades\Route;
 
@@ -17,14 +19,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get(
-    '/',
-    function () {
-        return view('welcome');
-    }
-);
+//Route::get(
+//    '/',
+//    function () {
+//        return view('welcome');
+//    }
+//);
 
-Route::match(['post', 'get'], '/login', [AuthController::class, 'login']);
+Route::match(['post', 'get'], '/', [AuthController::class, 'loginAdmin']);
+Route::get('/logout',[AuthController::class,'logoutAdmin']);
 Route::post('/register', [AuthController::class, 'register']);
 
 Route::prefix('/admin')->group(
@@ -36,27 +39,32 @@ Route::prefix('/admin')->group(
             }
         );
 
-        Route::prefix('/barang')->group(function (){
-            Route::match(['post','get'],'/', [BarangController::class, 'viewAllBarang']);
-            Route::post('/delete/{id}', [BarangController::class, 'destroy']);
-        });
+        Route::prefix('/barang')->group(
+            function () {
+                Route::match(['post', 'get'], '/', [BarangController::class, 'viewAllBarang']);
+                Route::post('/delete/{id}', [BarangController::class, 'destroy']);
+            }
+        );
 
-        Route::prefix('/guru')->group(function (){
-            Route::get('/',[GuruController::class, 'index']);
-            Route::post('/delete/{id}', [GuruController::class, 'destroy']);
-        });
+        Route::prefix('/guru')->group(
+            function () {
+                Route::get('/', [GuruController::class, 'index']);
+                Route::get('/get-guru', [GuruController::class, 'getGuru']);
+                Route::post('/delete/{id}', [GuruController::class, 'destroy']);
+            }
+        );
 
+        Route::get('/siswa', [SiswaController::class, 'index']);
 
-        Route::get('/siswa',[SiswaController::class,'index']);
+        Route::match(['post', 'get'], '/mapel', [MapelController::class, 'index']);
 
-        Route::get('/mapel', function () {
-            return view('admin/mapel/mapel');
-        });
+        Route::prefix('/laporanpinjaman')->group(
+            function () {
+                Route::get('/', [PeminjamanSiswaController::class, 'index']);
+                Route::post('/', [PeminjamanSiswaController::class, 'konfirmasi']);
 
-
-        Route::get('/laporanpinjaman', function () {
-            return view('admin/laporan/pinjamalat');
-        });
+            }
+        );
     }
 );
 

@@ -2,13 +2,14 @@
 
 use App\Http\Controllers\APIBarangController;
 use App\Http\Controllers\APIGuruController;
+use App\Http\Controllers\APIMapelController;
 use App\Http\Controllers\APISiswaController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BarangController;
 use App\Http\Controllers\MapelController;
 use App\Http\Controllers\MapelGuruController;
 use App\Http\Controllers\APIPeminjamanSiswaController;
-use App\Http\Controllers\PinjamGuruController;
+use App\Http\Controllers\APIPinjamGuruController;
 use App\Http\Controllers\SiswaController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -41,7 +42,7 @@ Route::middleware('auth:api')->get(
     }
 );
 
-Route::resource('mapel', MapelController::class);
+Route::resource('mapel', APIMapelController::class);
 Route::resource('mapel-guru', MapelGuruController::class);
 
 Route::group(
@@ -50,8 +51,10 @@ Route::group(
         Route::post('/logout', [AuthController::class, 'logout']);
         Route::match(['get', 'post'], '/siswa', [APISiswaController::class, 'index']);
         Route::match(['get', 'post'], '/guru', [APIGuruController::class, 'index']);
-        Route::resource('pinjam', APIPeminjamanSiswaController::class);
-        Route::resource('/pinjam-guru', PinjamGuruController::class);
+        Route::get( '/pinjam', [APIPeminjamanSiswaController::class, 'index']);
+        Route::post( '/pinjam', [APIPeminjamanSiswaController::class, 'store']);
+        Route::get( '/pinjam/{id}', [APIPeminjamanSiswaController::class, 'show']);
+        Route::resource('/pinjam-guru', APIPinjamGuruController::class);
 
     }
 );

@@ -34,93 +34,88 @@
                         </select>
 
                         <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
-                            data-bs-target="#tambahsiswa">Cetak</button>
+                                data-bs-target="#tambahsiswa">Cetak
+                        </button>
                     </div>
 
                 </div>
             </div>
 
-
             <table class="table table-striped table-bordered ">
                 <thead>
-                    <th>
-                        #
-                    </th>
-                    <th>
-                        Tanggal Pinjam
-                    </th>
-                    <th>
-                        Nama Barang
-                    </th>
-                    <th>
-                        Jumlah Pinjam
-                    </th>
+                <th>
+                    #
+                </th>
+                <th>
+                    Tanggal Pinjam
+                </th>
+                <th>
+                    Tanggal Kembali
+                </th>
+                <th>
+                    Nama Barang
+                </th>
+                <th>
+                    Jumlah Pinjam
+                </th>
 
-                    <th>
-                        Nama Siswa
-                    </th>
+                <th>
+                    Nama Siswa
+                </th>
 
-                    <th>
-                        Mapel
-                    </th>
+                <th>
+                    Mapel
+                </th>
 
-                    <th>
-                        Status
-                    </th>
+                <th>
+                    Status
+                </th>
+                <th>
+                    Action
+                </th>
 
                 </thead>
 
-                <tr>
-                    <td>
-                        1
-                    </td>
-                    <td>
-                        25 Juli 2021
-                    </td>
-                    <td>
-                        1
-                    </td>
-                    <td>
-                        bola Basket
-                    </td>
-                    <td>
-                        Topik
-                    </td>
-                    <td>
-                        Kimia
-                    </td>
-                    <td>
-                        Dipinjam
-                    </td>
-                </tr>
+                @forelse($pinjam as $key => $g)
+                    <tr>
+                        <td>
+                            {{$key + 1}}
+                        </td>
+                        <td>
+                            {{$g->tanggal_pinjam}}
+                        </td>
+                        <td>
+                            {{$g->tanggal_kembali ?? '-'}}
+                        </td>
+                        <td>
+                            {{$g->getBarang->nama_barang}}
+                        </td>
+                        <td>
+                            {{$g->qty}}
+                        </td>
+                        <td>
+                            {{$g->getSiswa->nama}}
+                        </td>
+                        <td>
+                            {{$g->getMapel->nama_mapel}}
+                        </td>
+                        <td>
+                            {{$g->status}}
+                        </td>
+                        <td>
+                            <a class="btn btn-primary btn-sm" onclick="konfirmasi(this)" data-status="2" data-id="{{$g->id}}" data-nama="{{$g->getBarang->nama_barang}}">Terima</a>
+                            <a class="btn btn-danger btn-sm" onclick="konfirmasi(this)" data-status="1" data-id="{{$g->id}}" data-nama="{{$g->getBarang->nama_barang}}">Tolak</a>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="7" class="text-center">Tidak ada data guru</td>
+                    </tr>
 
-                <tr>
-                    <td>
-                        2
-                    </td>
-                    <td>
-                        25 Juli 2021
-                    </td>
-                    <td>
-                        1
-                    </td>
-                    <td>
-                        bola Basket
-                    </td>
-                    <td>
-                        Bagus
-                    </td>
-                    <td>
-                        Kimia
-                    </td>
-                    <td>
-                        Dipinjam
-                    </td>
-                </tr>
+                @endforelse
             </table>
 
         </div>
-
 
 
     </section>
@@ -129,18 +124,80 @@
 
 @section('script')
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
 
         })
 
+        function capitalizeFirstLetter(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+
+        function konfirmasi(data) {
+            var nama = $(data).data('nama');
+            var status = $(data).data('status');
+            var id = $(data).data('id');
+
+            var txtStatus = 'terima';
+            if (status === 1) {
+                txtStatus = 'tolak'
+            }
+            let dataSend = {
+                '_token': '{{csrf_token()}}',
+                'id': id,
+                'status': status
+            };
+
+            swal({
+                title: capitalizeFirstLetter(txtStatus) + " Pinjaman?",
+                text: "Apa kamu yakin ingin " + txtStatus + " peminjaman barang "+nama+"? ",
+                icon: "info",
+                buttons: true,
+                primariMode: true,
+            })
+                .then((res) => {
+                    if (res) {
+                        $.ajax({
+                            type: "POST",
+                            data: dataSend,
+                            headers: {
+                                'Accept': "application/json"
+                            },
+                            success: function (data, textStatus, xhr) {
+                                if (xhr.status === 200) {
+                                    swal("Pinjaman berhasil " + txtStatus + " data!", {
+                                        icon: "success",
+                                    }).then((dat) => {
+                                        // window.location.reload();
+                                    });
+                                } else {
+                                    swal(data['msg'])
+                                }
+                                console.log()
+                            },
+                            complete: function (xhr, textStatus) {
+                                console.log(xhr.status);
+                                console.log(textStatus);
+                            },
+                            error: function (error, xhr, textStatus) {
+                                console.log("LOG ERROR", error.responseJSON.errors);
+                                console.log("LOG ERROR", error.responseJSON.errors[Object.keys(error.responseJSON.errors)[0]][0]);
+                                console.log(xhr.status);
+                                console.log(textStatus);
+                                swal(error.responseJSON.errors[Object.keys(error.responseJSON.errors)[0]][0])
+                            }
+                        })
+                    }
+                });
+        }
+
         function hapus(id, name) {
             swal({
-                    title: "Menghapus data?",
-                    text: "Apa kamu yakin, ingin menghapus data ?!",
-                    icon: "warning",
-                    buttons: true,
-                    dangerMode: true,
-                })
+                title: "Menghapus data?",
+                text: "Apa kamu yakin, ingin menghapus data ?!",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
                 .then((willDelete) => {
                     if (willDelete) {
                         swal("Berhasil Menghapus data!", {
@@ -153,7 +210,7 @@
         }
     </script>
     <script>
-        $(function() {
+        $(function () {
             $("#datepicker").datepicker();
         });
     </script>
