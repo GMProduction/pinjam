@@ -11,6 +11,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * Class APIPinjamGuruController
+ * @package App\Http\Controllers
+ */
 class APIPinjamGuruController extends CustomController
 {
 
