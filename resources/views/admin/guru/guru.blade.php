@@ -56,11 +56,12 @@
                             {{$g->getGuru->alamat ?? '-'}}
                         </td>
                         <td>
-                            {{$g->getGuru->tanggal ?? '-'}}
+                        {{$g->getGuru->tanggal ?? '-'}}
                         <td>
-                            <a class="btn btn-success btn-sm" id="editData"  data-id="{{$g->id}}" data-name="{{$g->getGuru->nama}}" data-alamat="{{$g->getGuru->alamat}}" data-tanggal="{{$g->getGuru->tanggal}}" data-username="{{$g->username}}">Ubah
+                            <a class="btn btn-success btn-sm" id="editData" data-id="{{$g->id}}" data-name="{{$g->getGuru->nama}}" data-alamat="{{$g->getGuru->alamat}}"
+                               data-tanggal="{{$g->getGuru->tanggal}}" data-username="{{$g->username}}">Ubah
                             </a>
-                            <button type="button" class="btn btn-danger btn-sm" onclick="hapus('{{$g->id}}', ' {{$g->getGuru->nama}}') ">hapus</button>
+                            <button type="button" class="btn btn-danger btn-sm" onclick="hapus('{{$g->id}}', '{{$g->getGuru->nama}}') ">hapus</button>
                         </td>
                     </tr>
                 @empty
@@ -85,8 +86,8 @@
                     <div class="modal-body">
                         <form id="formRegister">
                             @csrf
-                            <input name="roles" value="guru">
-                            <input name="id" id="id" value="">
+                            <input name="roles" value="guru" hidden>
+                            <input name="id" id="id" value="" hidden>
                             <div class="mb-3">
                                 <label for="namaguru" class="form-label">Nama Guru</label>
                                 <input type="text" class="form-control" id="nama" name="name" required>
@@ -115,7 +116,7 @@
 
                             <div class="mb-3">
                                 <label for="konfirmasi" class="form-label">Konfirmasi Password</label>
-                                <input type="password" class="form-control" id="konfirmasi" name="password_confirmation" required>
+                                <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" required>
                             </div>
 
                             <div class="mb-4"></div>
@@ -155,52 +156,82 @@
             $('#tambahguru #alamat').val($(this).data('alamat'));
             $('#tambahguru #tanggal').val($(this).data('tanggal'));
             $('#tambahguru #username').val($(this).data('username'));
-            $('#tambahguru #password').val('');
-            $('#tambahguru #password_confirmation').val('');
+            $('#tambahguru #password').val('*****');
+            $('#tambahguru #password_confirmation').val('*****');
             $('#tambahguru').modal('show');
         })
 
         function register() {
-            $.ajax({
-                type: "POST",
-                url: '/register',
-                data: $('#formRegister').serialize(),
-                headers: {
-                    'Accept': "application/json"
-                },
-                success: function (data, textStatus, xhr) {
-                    if (xhr.status === 200) {
-                        window.location.reload();
-
-                    }
-                },
-                complete: function (xhr, textStatus) {
-                    console.log(xhr.status);
-                    console.log(textStatus);
-                },
-                error: function (error, xhr, textStatus) {
-                    console.log("LOG ERROR", error.responseJSON.errors);
-                    console.log("LOG ERROR", error.responseJSON.errors[Object.keys(error.responseJSON.errors)[0]][0]);
-                    console.log(xhr.status);
-                    console.log(textStatus);
-                    swal(error.responseJSON.errors[Object.keys(error.responseJSON.errors)[0]][0])
-                }
+            var ket = 'menambah';
+            if ($('#tambahguru #id').val() !== '') {
+                ket = 'merubah';
+            }
+            swal({
+                title: ket +" data?",
+                text: "Apa kamu yakin ingin "+ket+" data ",
+                icon: "info",
+                buttons: true,
+                primariMode: true,
             })
+                .then((res) => {
+                    if (res) {
+                        $.ajax({
+                            type: "POST",
+                            url: '/register',
+                            data: $('#formRegister').serialize(),
+                            headers: {
+                                'Accept': "application/json"
+                            },
+                            success: function (data, textStatus, xhr) {
+                                if (xhr.status === 200) {
+                                    swal("Berhasil "+ket+" data!", {
+                                        icon: "success",
+                                    }).then((dat) => {
+                                        window.location.reload();
+                                    });
+                                } else {
+                                    swal(data['msg'])
+                                }
+                                console.log()
+                            },
+                            complete: function (xhr, textStatus) {
+                                console.log(xhr.status);
+                                console.log(textStatus);
+                            },
+                            error: function (error, xhr, textStatus) {
+                                console.log("LOG ERROR", error.responseJSON.errors);
+                                console.log("LOG ERROR", error.responseJSON.errors[Object.keys(error.responseJSON.errors)[0]][0]);
+                                console.log(xhr.status);
+                                console.log(textStatus);
+                                swal(error.responseJSON.errors[Object.keys(error.responseJSON.errors)[0]][0])
+                            }
+                        })
+                    }
+                });
+
+
         }
 
         function hapus(id, name) {
             swal({
                 title: "Menghapus data?",
-                text: "Apa kamu yakin, ingin menghapus data ?!",
+                text: "Apa kamu yakin, ingin menghapus data "+name+"?!",
                 icon: "warning",
                 buttons: true,
                 dangerMode: true,
             })
                 .then((willDelete) => {
                     if (willDelete) {
-                        swal("Berhasil Menghapus data!", {
-                            icon: "success",
-                        });
+                        let data = {
+                            '_token': '{{csrf_token()}}',
+                        };
+                        $.post('/admin/guru/delete/'+id,data ,function () {
+                            swal("Berhasil Menghapus data!", {
+                                icon: "success",
+                            }).then((dat) => {
+                                window.location.reload();
+                            });
+                        })
                     } else {
                         swal("Data belum terhapus");
                     }

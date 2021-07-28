@@ -1,10 +1,12 @@
 <?php
 
+use App\Http\Controllers\APIBarangController;
+use App\Http\Controllers\APISiswaController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BarangController;
 use App\Http\Controllers\MapelController;
 use App\Http\Controllers\MapelGuruController;
-use App\Http\Controllers\PeminjamanSiswaController;
+use App\Http\Controllers\APIPeminjamanSiswaController;
 use App\Http\Controllers\PinjamGuruController;
 use App\Http\Controllers\SiswaController;
 use Illuminate\Http\Request;
@@ -25,9 +27,9 @@ Route::post('/register',[AuthController::class,'register']);
 Route::post('/login',[AuthController::class,'login']);
 
 Route::post('/register',[AuthController::class,'register']);
-Route::get('/barang', [BarangController::class, 'getAllProduct']);
-Route::get('/barang/{id}', [BarangController::class, 'getProductById']);
-Route::get('/barang/cari/nama', [BarangController::class, 'getProductByName']);
+Route::get('/barang', [APIBarangController::class, 'getAllProduct']);
+Route::get('/barang/{id}', [APIBarangController::class, 'getProductById']);
+//Route::get('/barang/cari/nama', [APIBarangController::class, 'getProductByName']);
 
 
 //Route::resource('barang',BarangController::class);
@@ -41,8 +43,8 @@ Route::resource('mapel-guru', MapelGuruController::class);
 
 Route::group(['middleware' => ['auth:sanctum']], function (){
     Route::post('/logout',[AuthController::class,'logout']);
-    Route::resource('siswa', SiswaController::class);
-    Route::resource('pinjam', PeminjamanSiswaController::class);
+    Route::resource('siswa', APISiswaController::class);
+    Route::resource('pinjam', APIPeminjamanSiswaController::class);
     Route::resource('/pinjam-guru', PinjamGuruController::class);
 
 });

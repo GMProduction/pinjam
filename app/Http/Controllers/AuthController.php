@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Siswa;
-use http\Client\Curl\User;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
@@ -17,17 +17,46 @@ class AuthController extends Controller
 
     public function register(Request $r)
     {
-        $field = $r->validate(
-            [
-                'name'     => 'required|string',
-                'username' => 'required|string|unique:users,username',
-                'password' => 'required|string|confirmed',
-            ]
-        );
-        if ($r->get('id')){
 
-        }else{
-            $user  = \App\Models\User::create(
+        if ($r->get('id')) {
+            $username = User::where([['username', '=', $r->get('username')], ['id', '!=', $r->get('id')]])->first();
+            if ($username) {
+                return response()->json(
+                    [
+                      "msg" => "The username has already been taken.",
+                    ],'201'
+                );
+            }
+            $field = $r->validate(
+                [
+                    'name'     => 'required|string',
+                    'password' => 'required|string|confirmed',
+                ]
+            );
+
+            $user = User::find($r->get('id'));
+            $user->update(
+                [
+                    'username' => $r->get('username'),
+                ]
+            );
+            if (strpos($r->get('password'), '*') !== false) {
+                $user->update(
+                    [
+                        'password' => Hash::make($field['password']),
+                    ]
+                );
+            }
+        } else {
+            $field = $r->validate(
+                [
+                    'name'     => 'required|string',
+                    'username' => 'required|string|unique:users,username',
+                    'password' => 'required|string|confirmed',
+                ]
+            );
+
+            $user = User::create(
                 [
                     'username' => $field['username'],
                     'password' => Hash::make($field['password']),
@@ -35,7 +64,6 @@ class AuthController extends Controller
                 ]
             );
         }
-
 
         $response = [
             'user' => $user,
@@ -47,7 +75,7 @@ class AuthController extends Controller
             $model    = 'Siswa';
             $token    = $user->createToken('appsiswa')->plainTextToken;
             $response = Arr::add($response, 'token', $token);
-            $us       = \App\Models\User::find($user->id);
+            $us       = User::find($user->id);
             $us->update(
                 [
                     'token' => $token,
@@ -57,7 +85,7 @@ class AuthController extends Controller
             $model    = 'Guru';
             $token    = $user->createToken('appguru')->plainTextToken;
             $response = Arr::add($response, 'token', $token);
-            $us       = \App\Models\User::find($user->id);
+            $us       = User::find($user->id);
             $us->update(
                 [
                     'token' => $token,
@@ -65,31 +93,52 @@ class AuthController extends Controller
             );
         }
 
-
-
         $models = '\\App\\Models\\'.$model;
-        if ($model == 'Guru'){
-            $member = $models::create(
-                [
-                    'id_user' => $user->id,
-                    'nama'    => $r->get('name'),
-                    'alamat'    => $r->get('alamat'),
-                    'tanggal'    => $r->get('tanggal'),
-                ]
-            );
-        }elseif ($model == 'Siswa'){
-            $member = $models::create(
-                [
-                    'id_user' => $user->id,
-                    'nama'    => $r->get('name'),
-                    'alamat'    => $r->get('alamat'),
-                    'tanggal'    => $r->get('tanggal'),
-                    'kelas'    => $r->get('kelas'),
-                    'no_hp'    => $r->get('no_hp'),
-                ]
-            );
+        if ($model == 'Guru') {
+            if ($r->get('id')) {
+                $member = $models::where('id_user', '=', $user->id)->first();
+                $member->update(
+                    [
+                        'nama'    => $r->get('name'),
+                        'alamat'  => $r->get('alamat'),
+                        'tanggal' => $r->get('tanggal'),
+                    ]
+                );
+            } else {
+                $member = $models::create(
+                    [
+                        'id_user' => $user->id,
+                        'nama'    => $r->get('name'),
+                        'alamat'  => $r->get('alamat'),
+                        'tanggal' => $r->get('tanggal'),
+                    ]
+                );
+            }
+        } elseif ($model == 'Siswa') {
+            if ($r->get('id')) {
+                $member = $models::where('id_user', '=', $user->id)->first();
+                $member->update(
+                    [
+                        'nama'    => $r->get('name'),
+                        'alamat'  => $r->get('alamat'),
+                        'tanggal' => $r->get('tanggal'),
+                        'kelas'   => $r->get('kelas'),
+                        'no_hp'   => $r->get('no_hp'),
+                    ]
+                );
+            } else {
+                $member = $models::create(
+                    [
+                        'id_user' => $user->id,
+                        'nama'    => $r->get('name'),
+                        'alamat'  => $r->get('alamat'),
+                        'tanggal' => $r->get('tanggal'),
+                        'kelas'   => $r->get('kelas'),
+                        'no_hp'   => $r->get('no_hp'),
+                    ]
+                );
+            }
         }
-
 
         $response = Arr::add($response, 'member', $member);
 
@@ -109,7 +158,7 @@ class AuthController extends Controller
                 ]
             );
 
-            $user = \App\Models\User::where('username', $field['username'])->first();
+            $user = User::where('username', $field['username'])->first();
             $uri  = $_SERVER['REQUEST_URI'];
 
             if ( ! $user || ! Hash::check($field['password'], $user->password)) {
@@ -166,7 +215,7 @@ class AuthController extends Controller
      */
     public function logout(Request $r)
     {
-        $us = \App\Models\User::find(Auth::user()->id);
+        $us = User::find(Auth::user()->id);
         $us->update(
             [
                 'token' => null,

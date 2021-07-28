@@ -95,7 +95,7 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <form method="post">
+                            <form method="post" id="formBarang">
                                 @csrf
                                 <input id="id" name="id" hidden>
                                 <div class="mb-3">
@@ -108,7 +108,7 @@
                                 </div>
 
                                 <div class="mb-4"></div>
-                                <button type="submit" class="btn btn-primary">Simpan</button>
+                                <a type="submit" class="btn btn-primary" onclick="save()">Simpan</a>
                             </form>
                         </div>
 
@@ -141,6 +141,57 @@
            $('#tambahbarang #qty').val($(this).data('qty'));
            $('#tambahbarang').modal('show');
        })
+
+        function save() {
+            var ket = 'menambah';
+            if ($('#tambahbarang #id').val() !== '') {
+                ket = 'merubah';
+            }
+            swal({
+                title: ket +" data?",
+                text: "Apa kamu yakin ingin "+ket+" data ",
+                icon: "info",
+                buttons: true,
+                primariMode: true,
+            })
+                .then((res) => {
+                    if (res) {
+                        $.ajax({
+                            type: "POST",
+                            url: '/admin/barang',
+                            data: $('#formBarang').serialize(),
+                            headers: {
+                                'Accept': "application/json"
+                            },
+                            success: function (data, textStatus, xhr) {
+                                if (xhr.status === 200) {
+                                    swal("Berhasil "+ket+" data!", {
+                                        icon: "success",
+                                    }).then((dat) => {
+                                        window.location.reload();
+                                    });
+                                } else {
+                                    swal(data['msg'])
+                                }
+                                console.log()
+                            },
+                            complete: function (xhr, textStatus) {
+                                console.log(xhr.status);
+                                console.log(textStatus);
+                            },
+                            error: function (error, xhr, textStatus) {
+                                // console.log("LOG ERROR", error.responseJSON.errors);
+                                // console.log("LOG ERROR", error.responseJSON.errors[Object.keys(error.responseJSON.errors)[0]][0]);
+                                console.log(xhr.status);
+                                console.log(textStatus);
+                                swal(error.responseJSON.errors[Object.keys(error.responseJSON.errors)[0]][0])
+                            }
+                        })
+                    }
+                });
+
+
+        }
 
 
         function hapus(id, name) {
