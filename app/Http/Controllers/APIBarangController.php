@@ -19,8 +19,9 @@ class APIBarangController extends CustomController
      */
     public function getAllProduct(Request $request)
     {
-        $name = $request->query->get('name');
-        $barang =  Barang::where('nama_barang', 'like', '%'.$name.'%')->get();
+        $name = $request->get('name');
+        $offset = $request->get('offset') ?? 0;
+        $barang =  Barang::where('nama_barang', 'like', '%'.$name.'%')->offset($offset)->limit(4)->get();
 //        $barang     = Barang::all();
         $dataBarang = [];
         foreach ($barang as $bar) {
@@ -29,7 +30,7 @@ class APIBarangController extends CustomController
             $dataBarang[] = Arr::add($bar, 'stok', $stok);
 
         }
-        $response = $barang->take(4);
+
 
         return $this->jsonResponse($dataBarang);
 
