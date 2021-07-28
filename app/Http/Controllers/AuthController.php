@@ -24,13 +24,18 @@ class AuthController extends Controller
                 'password' => 'required|string|confirmed',
             ]
         );
-        $user  = \App\Models\User::create(
-            [
-                'username' => $field['username'],
-                'password' => Hash::make($field['password']),
-                'roles'    => $r->get('roles') == '' ? 'siswa' : $r->get('roles'),
-            ]
-        );
+        if ($r->get('id')){
+
+        }else{
+            $user  = \App\Models\User::create(
+                [
+                    'username' => $field['username'],
+                    'password' => Hash::make($field['password']),
+                    'roles'    => $r->get('roles') == '' ? 'siswa' : $r->get('roles'),
+                ]
+            );
+        }
+
 
         $response = [
             'user' => $user,

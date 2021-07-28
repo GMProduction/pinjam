@@ -25,9 +25,13 @@ class PeminjamanSiswaController extends CustomController
     public function index()
     {
         //
-        $pinjam = Peminjaman::with(['getSiswa', 'getBarang', 'getMapel.getGuru', 'getGuru', 'getStaf'])->find(Auth::id());
-
+        $pinjam = Peminjaman::with(['getSiswa', 'getBarang', 'getMapel.getGuru', 'getGuru', 'getStaf'])
+                            ->whereHas('getSiswa', function ($query){
+                                return $query->where('id_user','=',Auth::id());
+                            })
+                            ->orderBy('created_at','desc')->get();
         return $pinjam;
+
     }
 
     /**

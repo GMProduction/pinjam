@@ -97,7 +97,7 @@
                         <div class="modal-body">
                             <form method="post">
                                 @csrf
-                                <input id="id" name="id">
+                                <input id="id" name="id" hidden>
                                 <div class="mb-3">
                                     <label for="namabarang" class="form-label">Nama Barang</label>
                                     <input type="text" class="form-control" id="nama_barang" name="nama_barang">
