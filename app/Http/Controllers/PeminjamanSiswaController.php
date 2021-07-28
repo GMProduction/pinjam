@@ -41,6 +41,14 @@ class PeminjamanSiswaController extends CustomController
 
     public function store()
     {
+//        return response()->json(
+//            [
+//                "id" => $this->request->get('id_barang'),
+//                "id_mapel" => $this->request->get('id_mapel'),
+//                "qty" => $this->request->get('qty'),
+//                "tanggal_pinjam" => $this->request->get('tanggal_pinjam'),
+//            ]
+//        );
         $barang = Barang::find($this->request->get('id_barang'));
         if ( ! $barang) {
             return response()->json(
