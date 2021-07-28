@@ -19,7 +19,6 @@ class BarangController extends CustomController
      */
     public function getAllProduct()
     {
-        $uri        = $_SERVER['REQUEST_URI'];
         $barang     = Barang::all();
         $dataBarang = [];
         foreach ($barang as $bar) {
@@ -27,11 +26,6 @@ class BarangController extends CustomController
             $stok         = (int)$bar->qty - (int)$keluar;
             $dataBarang[] = Arr::add($bar, 'stok', $stok);
 
-        }
-        if ($uri && strpos($uri, 'api')) {
-            $response = $barang->take(4);
-
-            return $this->jsonResponse($dataBarang);
         }
 
         return $dataBarang;

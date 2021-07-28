@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helper\CustomController;
 use App\Models\Siswa;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -11,19 +12,35 @@ use Illuminate\Support\Facades\Auth;
  * Class APISiswaController
  * @package App\Http\Controllers
  */
-class APISiswaController extends Controller
+class APISiswaController extends CustomController
 {
     //
 
     /**
-     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model|null
+     * @return \Illuminate\Http\JsonResponse
      */
     public function index()
     {
         //
-        $siswa = User::with(['getSiswa'])->find(Auth::id());
-        return $siswa;
+        try {
+        $user = User::with(['getSiswa'])->where('roles','=','siswa')->find(Auth::id());
+        if ($this->request->isMethod('POST')){
+            $this->request->validate([
+                'nama' => 'required|string',
+                'alamat' => 'required|string',
+                'tanggal' =>'required',
+                'kelas' => 'required',
+                'no_hp' => 'required'
+            ]);
+            $siswa = Siswa::where('id_user','=',$user->id);
+            $siswa->update($this->request->all());
+            $user = User::with(['getSiswa'])->find($user->id);
+        }
 
+            return $this->jsonResponse($user, 200);
+        } catch (\Exception $er) {
+            return $this->jsonResponse('error '.$er, 500);
+        }
     }
 
     /**
@@ -81,17 +98,7 @@ class APISiswaController extends Controller
     public function update($id)
     {
         //
-        $this->request->validate([
-            'nama' => 'required|string',
-            'alamat' => 'required|string',
-            'tanggal' =>'required',
-            'kelas' => 'required',
-            'no_hp' => 'required'
-        ]);
 
-        $siswa = Siswa::where('id_user','=',Auth::id())->first();
-        $siswa->update($this->request->all());
-        return $siswa;
     }
 
     /**

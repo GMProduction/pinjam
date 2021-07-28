@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\APIBarangController;
+use App\Http\Controllers\APIGuruController;
 use App\Http\Controllers\APISiswaController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BarangController;
@@ -22,29 +23,35 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::post('/register',[AuthController::class,'register']);
+Route::post('/register', [AuthController::class, 'register']);
 
-Route::post('/login',[AuthController::class,'login']);
+Route::post('/login', [AuthController::class, 'login']);
 
-Route::post('/register',[AuthController::class,'register']);
+Route::post('/register', [AuthController::class, 'register']);
 Route::get('/barang', [APIBarangController::class, 'getAllProduct']);
 Route::get('/barang/{id}', [APIBarangController::class, 'getProductById']);
 //Route::get('/barang/cari/nama', [APIBarangController::class, 'getProductByName']);
 
-
 //Route::resource('barang',BarangController::class);
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::middleware('auth:api')->get(
+    '/user',
+    function (Request $request) {
+        return $request->user();
+    }
+);
 
 Route::resource('mapel', MapelController::class);
 Route::resource('mapel-guru', MapelGuruController::class);
 
-Route::group(['middleware' => ['auth:sanctum']], function (){
-    Route::post('/logout',[AuthController::class,'logout']);
-    Route::resource('siswa', APISiswaController::class);
-    Route::resource('pinjam', APIPeminjamanSiswaController::class);
-    Route::resource('/pinjam-guru', PinjamGuruController::class);
+Route::group(
+    ['middleware' => ['auth:sanctum']],
+    function () {
+        Route::post('/logout', [AuthController::class, 'logout']);
+        Route::match(['get', 'post'], '/siswa', [APISiswaController::class, 'index']);
+        Route::match(['get', 'post'], '/guru', [APIGuruController::class, 'index']);
+        Route::resource('pinjam', APIPeminjamanSiswaController::class);
+        Route::resource('/pinjam-guru', PinjamGuruController::class);
 
-});
+    }
+);

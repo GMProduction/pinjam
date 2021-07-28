@@ -53,35 +53,43 @@
                     </th>
 
                 </thead>
-
+                @forelse($siswa as $key => $g)
                 <tr>
                     <td>
-                        1
+                        {{$key + 1}}
+
                     </td>
                     <td>
-                        Erfin
+                        {{$g->getSiswa->nama}}
+
                     </td>
                     <td>
-                        Sukoharjo
+                        {{$g->getSiswa->alamat ?? '-'}}
                     </td>
                     <td>
-                        23 Maret 1994
+                        {{$g->getSiswa->tanggal ?? '-'}}
+
                     </td>
                     <td>
-                        XII A
+                        {{$g->getSiswa->kelas ?? '-'}}
+
                     </td>
 
                     <td>
-                        08787845457
+                        {{$g->getSiswa->no_hp ?? '-'}}
                     </td>
 
                     <td>
-                        <a type="button" class="btn btn-success btn-sm" data-bs-toggle="modal"
-                            data-bs-target="#editData">Ubah</a>
+                        <a type="button" class="btn btn-success btn-sm"  id="editData">Ubah</a>
                         <button type="button" class="btn btn-danger btn-sm" onclick="hapus('id', 'nama') ">hapus</button>
                     </td>
                 </tr>
+                @empty
+                    <tr>
+                        <td colspan="6" class="text-center">Tidak ada data guru</td>
+                    </tr>
 
+                @endforelse
             </table>
 
         </div>
@@ -168,7 +176,7 @@
             $('#formRegister #username').val('');
             $('#formRegister #password').val('');
             $('#formRegister #password_confirmation').val('');
-            $('#formRegister').modal('show');
+            $('#tambahsiswa').modal('show');
         }
 
         $(document).on('click', '#editData', function () {
@@ -179,7 +187,7 @@
             $('#formRegister #username').val($(this).data('username'));
             $('#formRegister #password').val('*****');
             $('#formRegister #password_confirmation').val('*****');
-            $('#formRegister').modal('show');
+            $('#tambahsiswa').modal('show');
         })
 
         function register() {

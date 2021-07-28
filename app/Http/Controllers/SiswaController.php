@@ -10,6 +10,12 @@ use Illuminate\Support\Facades\Auth;
 
 class SiswaController extends CustomController
 {
-
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function index(){
+        $siswa = User::with(['getSiswa'])->where('roles','=','siswa')->get();
+        return view('admin.siswa.siswa')->with(['siswa' => $siswa]);
+    }
 
 }

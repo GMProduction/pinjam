@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BarangController;
 use App\Http\Controllers\GuruController;
+use App\Http\Controllers\SiswaController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -46,12 +47,7 @@ Route::prefix('/admin')->group(
         });
 
 
-        Route::get(
-            '/siswa',
-            function () {
-                return view('admin/siswa/siswa');
-            }
-        );
+        Route::get('/siswa',[SiswaController::class,'index']);
 
         Route::get('/mapel', function () {
             return view('admin/mapel/mapel');
