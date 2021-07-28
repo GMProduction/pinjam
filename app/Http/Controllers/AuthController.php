@@ -24,13 +24,18 @@ class AuthController extends Controller
                 'password' => 'required|string|confirmed',
             ]
         );
-        $user  = \App\Models\User::create(
-            [
-                'username' => $field['username'],
-                'password' => Hash::make($field['password']),
-                'roles'    => $r->get('roles') == '' ? 'siswa' : $r->get('roles'),
-            ]
-        );
+        if ($r->get('id')){
+
+        }else{
+            $user  = \App\Models\User::create(
+                [
+                    'username' => $field['username'],
+                    'password' => Hash::make($field['password']),
+                    'roles'    => $r->get('roles') == '' ? 'siswa' : $r->get('roles'),
+                ]
+            );
+        }
+
 
         $response = [
             'user' => $user,
@@ -60,13 +65,31 @@ class AuthController extends Controller
             );
         }
 
+
+
         $models = '\\App\\Models\\'.$model;
-        $member = $models::create(
-            [
-                'id_user' => $user->id,
-                'nama'    => $r->get('name'),
-            ]
-        );
+        if ($model == 'Guru'){
+            $member = $models::create(
+                [
+                    'id_user' => $user->id,
+                    'nama'    => $r->get('name'),
+                    'alamat'    => $r->get('alamat'),
+                    'tanggal'    => $r->get('tanggal'),
+                ]
+            );
+        }elseif ($model == 'Siswa'){
+            $member = $models::create(
+                [
+                    'id_user' => $user->id,
+                    'nama'    => $r->get('name'),
+                    'alamat'    => $r->get('alamat'),
+                    'tanggal'    => $r->get('tanggal'),
+                    'kelas'    => $r->get('kelas'),
+                    'no_hp'    => $r->get('no_hp'),
+                ]
+            );
+        }
+
 
         $response = Arr::add($response, 'member', $member);
 
@@ -78,7 +101,7 @@ class AuthController extends Controller
     public function login(Request $r)
     {
 
-        if ($r->isMethod('POST')){
+        if ($r->isMethod('POST')) {
             $field = $r->validate(
                 [
                     'username' => 'required|string',
@@ -87,7 +110,7 @@ class AuthController extends Controller
             );
 
             $user = \App\Models\User::where('username', $field['username'])->first();
-            $uri = $_SERVER['REQUEST_URI'];
+            $uri  = $_SERVER['REQUEST_URI'];
 
             if ( ! $user || ! Hash::check($field['password'], $user->password)) {
 //            throw ValidationException::withMessages([
@@ -100,10 +123,11 @@ class AuthController extends Controller
                             'msg'    => 'Login gagal',
                         ]
                     );
-                }else{
+                } else {
                     $data = [
-                        'msg' => 'Login gagal'
+                        'msg' => 'Login gagal',
                     ];
+
                     return Redirect::back()->withErrors($data);
 
                 }

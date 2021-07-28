@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BarangController;
+use App\Http\Controllers\GuruController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -39,12 +40,11 @@ Route::prefix('/admin')->group(
             Route::post('/delete/{id}', [BarangController::class, 'destroy']);
         });
 
-        Route::get(
-            '/guru',
-            function () {
-                return view('admin/guru/guru');
-            }
-        );
+        Route::prefix('/guru')->group(function (){
+            Route::get('/',[GuruController::class, 'index']);
+            Route::post('/delete/{id}', [GuruController::class, 'destroy']);
+        });
+
 
         Route::get(
             '/siswa',
@@ -52,7 +52,17 @@ Route::prefix('/admin')->group(
                 return view('admin/siswa/siswa');
             }
         );
+
+        Route::get('/mapel', function () {
+            return view('admin/mapel/mapel');
+        });
+
+
+        Route::get('/laporanpinjaman', function () {
+            return view('admin/laporan/pinjamalat');
+        });
     }
 );
+
 
 

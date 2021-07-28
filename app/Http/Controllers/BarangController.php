@@ -151,7 +151,13 @@ class BarangController extends CustomController
                     'qty'         => 'required|int',
                 ]
             );
-            $data = Barang::create($this->request->all());
+            if ($this->request->get('id')){
+                $bar = Barang::find($this->request->get('id'));
+                $bar->update($this->request->all());
+
+            }else{
+                Barang::create($this->request->all());
+            }
 
             return redirect('/admin/barang');
         }

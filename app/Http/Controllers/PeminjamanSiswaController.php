@@ -8,6 +8,7 @@ use App\Models\Mapel;
 use App\Models\Peminjaman;
 use App\Models\Siswa;
 use App\Models\Staf;
+use http\Env\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -24,9 +25,13 @@ class PeminjamanSiswaController extends CustomController
     public function index()
     {
         //
-        $pinjam = Peminjaman::with(['getSiswa', 'getBarang', 'getMapel.getGuru', 'getGuru', 'getStaf'])->find(Auth::id());
-
+        $pinjam = Peminjaman::with(['getSiswa', 'getBarang', 'getMapel.getGuru', 'getGuru', 'getStaf'])
+                            ->whereHas('getSiswa', function ($query){
+                                return $query->where('id_user','=',Auth::id());
+                            })
+                            ->orderBy('created_at','desc')->get();
         return $pinjam;
+
     }
 
     /**

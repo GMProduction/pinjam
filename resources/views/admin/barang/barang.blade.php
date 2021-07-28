@@ -20,8 +20,7 @@
 
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h5>Data Barang</h5>
-                <button type="button ms-auto" class="btn btn-primary btn-sm" data-bs-toggle="modal"
-                        data-bs-target="#tambahbarang">Tambah Data
+                <button type="button ms-auto" class="btn btn-primary btn-sm" onclick="addData()">Tambah Data
                 </button>
             </div>
 
@@ -69,10 +68,9 @@
                             {{$bar->stok}}
                         </td>
                         <td>
-                            <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal"
-                                    data-bs-target="#editbarang">Ubah
-                            </button>
-                            <button type="button" class="btn btn-danger btn-sm" onclick="hapus('id', 'nama') ">hapus</button>
+                            <a class="btn btn-success btn-sm" id="editData"  data-id="{{$bar->id}}" data-name="{{$bar->nama_barang}}" data-qty="{{$bar->qty}}">Ubah
+                            </a>
+                            <button type="button" class="btn btn-danger btn-sm" onclick="hapus('{{$bar->id}}', ' {{$bar->nama_barang}}') ">hapus</button>
                         </td>
                     </tr>
                 @empty
@@ -99,13 +97,14 @@
                         <div class="modal-body">
                             <form method="post">
                                 @csrf
+                                <input id="id" name="id" hidden>
                                 <div class="mb-3">
                                     <label for="namabarang" class="form-label">Nama Barang</label>
-                                    <input type="text" class="form-control" id="namaeditbarang" name="nama_barang">
+                                    <input type="text" class="form-control" id="nama_barang" name="nama_barang">
                                 </div>
                                 <div class="mb-3">
                                     <label for="jumlah" class="form-label">Jumlah</label>
-                                    <input type="number" class="form-control" id="jumlahedit" name="qty">
+                                    <input type="number" class="form-control" id="qty" name="qty">
                                 </div>
 
                                 <div class="mb-4"></div>
@@ -129,19 +128,39 @@
 
         })
 
+        function addData() {
+            $('#tambahbarang #id').val('');
+            $('#tambahbarang #nama_barang').val('');
+            $('#tambahbarang #qty').val('');
+            $('#tambahbarang').modal('show');
+        }
+
+       $(document).on('click', '#editData', function () {
+           $('#tambahbarang #id').val($(this).data('id'));
+           $('#tambahbarang #nama_barang').val($(this).data('name'));
+           $('#tambahbarang #qty').val($(this).data('qty'));
+           $('#tambahbarang').modal('show');
+       })
+
+
         function hapus(id, name) {
             swal({
                 title: "Menghapus data?",
-                text: "Apa kamu yakin, ingin menghapus data ?!",
+                text: "Apa kamu yakin, ingin menghapus data "+name+"!",
                 icon: "warning",
                 buttons: true,
                 dangerMode: true,
             })
                 .then((willDelete) => {
                     if (willDelete) {
-                       $.post('/admin/barang/'+id, function () {
+                        let data = {
+                            '_token': '{{csrf_token()}}',
+                        };
+                       $.post('/admin/barang/delete/'+id,data ,function () {
                            swal("Berhasil Menghapus data!", {
                                icon: "success",
+                           }).then((dat) => {
+                               window.location.reload();
                            });
                        })
                     } else {
