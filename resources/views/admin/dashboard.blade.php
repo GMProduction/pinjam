@@ -10,7 +10,7 @@ Dashboard
         <div class="table-container">
 
             <h5 class="mb-3">Permintaan peminjaman barang</h5>
-    
+
                 <table class="table table-striped table-bordered ">
                     <thead>
                         <th>
@@ -25,83 +25,72 @@ Dashboard
                         <th>
                             Jumlah Pinjam
                         </th>
-    
+
                         <th>
                             Nama Siswa
                         </th>
-    
+
                         <th>
                             Mapel
                         </th>
-    
+
                         <th>
                             Status
                         </th>
-    
+
                         <th>
                             Action
                         </th>
 
                     </thead>
-    
-                    <tr>
-                        <td>
-                            1
-                        </td>
-                        <td>
-                            25 Juli 2021
-                        </td>
-                        <td>
-                            1
-                        </td>
-                        <td>
-                            bola Basket
-                        </td>
-                        <td>
-                            Topik
-                        </td>
-                        <td>
-                            Kimia
-                        </td>
-                        <td>
-                            Dipinjam
-                        </td>
 
-                        <td>
-                            <button type="button" class="btn btn-primary btn-sm">Terima</button>
-                            <button type="button" class="btn btn-danger btn-sm">Tolak</button>
-                        </td>
-                    </tr>
-    
-                    <tr>
-                        <td>
-                            2
-                        </td>
-                        <td>
-                            25 Juli 2021
-                        </td>
-                        <td>
-                            1
-                        </td>
-                        <td>
-                            bola Basket
-                        </td>
-                        <td>
-                            Bagus
-                        </td>
-                        <td>
-                            Kimia
-                        </td>
-                        <td>
-                            Dipinjam
-                        </td>
-                        <td>
-                            <button type="button" class="btn btn-primary btn-sm">Terima</button>
-                            <button type="button" class="btn btn-danger btn-sm">Tolak</button>
-                        </td>
-                    </tr>
+                    @forelse($proses as $key => $g)
+                        <tr>
+                            <td>
+                                {{$key + 1}}
+                            </td>
+                            <td>
+                                {{$g->tanggal_pinjam}}
+                            </td>
+                            <td>
+                                {{$g->tanggal_kembali ?? '-'}}
+                            </td>
+                            <td>
+                                {{$g->getBarang->nama_barang}}
+                            </td>
+                            <td>
+                                {{$g->qty}}
+                            </td>
+                            <td>
+                                {{$g->getSiswa->nama}}
+                            </td>
+                            <td>
+                                {{$g->getMapel->nama_mapel}}
+                            </td>
+
+                            <td>
+                                @if($g->status == 0)
+                                    <a class="btn btn-primary btn-sm" onclick="konfirmasi(this)" data-status="2" data-id="{{$g->id}}" data-nama="{{$g->getBarang->nama_barang}}">Terima</a>
+                                    <a class="btn btn-danger btn-sm" onclick="konfirmasi(this)" data-status="1" data-id="{{$g->id}}" data-nama="{{$g->getBarang->nama_barang}}">Tolak</a>
+                                @elseif($g->status == 3)
+                                    <a class="btn btn-primary btn-sm" onclick="konfirmasi(this)" data-status="4" data-id="{{$g->id}}" data-nama="{{$g->getBarang->nama_barang}}">Diambil</a>
+                                @elseif($g->status == 4)
+                                    <a class="btn btn-primary btn-sm" onclick="konfirmasi(this)" data-status="5" data-id="{{$g->id}}" data-nama="{{$g->getBarang->nama_barang}}">Dikembalikan</a>
+                                @elseif($g->status == 1)
+                                    <label>Ditolak</label>
+                                @elseif($g->status == 2)
+                                    <label>Menunggu konfirmasi guru</label>
+                                @endif
+
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="8" class="text-center">Tidak ada data pinjaman</td>
+                        </tr>
+                    @endforelse
                 </table>
-    
+
             </div>
 
         <div class="table-container">
@@ -137,58 +126,56 @@ Dashboard
 
                 </thead>
 
-                <tr>
-                    <td>
-                        1
-                    </td>
-                    <td>
-                        25 Juli 2021
-                    </td>
-                    <td>
-                        1
-                    </td>
-                    <td>
-                        bola Basket
-                    </td>
-                    <td>
-                        Topik
-                    </td>
-                    <td>
-                        Kimia
-                    </td>
-                    <td>
-                        Dipinjam
-                    </td>
-                </tr>
+                @forelse($pinjam as $key => $g)
+                    <tr>
+                        <td>
+                            {{$key + 1}}
+                        </td>
+                        <td>
+                            {{$g->tanggal_pinjam}}
+                        </td>
+                        <td>
+                            {{$g->tanggal_kembali ?? '-'}}
+                        </td>
+                        <td>
+                            {{$g->getBarang->nama_barang}}
+                        </td>
+                        <td>
+                            {{$g->qty}}
+                        </td>
+                        <td>
+                            {{$g->getSiswa->nama}}
+                        </td>
+                        <td>
+                            {{$g->getMapel->nama_mapel}}
+                        </td>
 
-                <tr>
-                    <td>
-                        2
-                    </td>
-                    <td>
-                        25 Juli 2021
-                    </td>
-                    <td>
-                        1
-                    </td>
-                    <td>
-                        bola Basket
-                    </td>
-                    <td>
-                        Bagus
-                    </td>
-                    <td>
-                        Kimia
-                    </td>
-                    <td>
-                        Dipinjam
-                    </td>
-                </tr>
+                        <td>
+                            @if($g->status == 0)
+                                <a class="btn btn-primary btn-sm" onclick="konfirmasi(this)" data-status="2" data-id="{{$g->id}}" data-nama="{{$g->getBarang->nama_barang}}">Terima</a>
+                                <a class="btn btn-danger btn-sm" onclick="konfirmasi(this)" data-status="1" data-id="{{$g->id}}" data-nama="{{$g->getBarang->nama_barang}}">Tolak</a>
+                            @elseif($g->status == 3)
+                                <a class="btn btn-primary btn-sm" onclick="konfirmasi(this)" data-status="4" data-id="{{$g->id}}" data-nama="{{$g->getBarang->nama_barang}}">Diambil</a>
+                            @elseif($g->status == 4)
+                                <a class="btn btn-primary btn-sm" onclick="konfirmasi(this)" data-status="5" data-id="{{$g->id}}" data-nama="{{$g->getBarang->nama_barang}}">Dikembalikan</a>
+                            @elseif($g->status == 1)
+                                <label>Ditolak</label>
+                            @elseif($g->status == 2)
+                                <label>Menunggu konfirmasi guru</label>
+                            @endif
+
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="8" class="text-center">Tidak ada data pinjaman</td>
+                    </tr>
+                @endforelse
             </table>
 
         </div>
     </section>
-   
+
 
 @endsection
 

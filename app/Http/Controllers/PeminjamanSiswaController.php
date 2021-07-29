@@ -19,26 +19,36 @@ use Illuminate\Support\Facades\Auth;
 class PeminjamanSiswaController extends CustomController
 {
 
+    public function dataBarangProses(){
+        $pinjam = Peminjaman::with(['getSiswa', 'getBarang', 'getMapel.getGuru', 'getGuru', 'getStaf'])->where([['status','!=',5],['status','!=',1]])->orderBy('created_at','desc')->get();
+        return $pinjam;
+    }
+
+    public function dataBarangDikembalikan(){
+        $pinjam = Peminjaman::with(['getSiswa', 'getBarang', 'getMapel.getGuru', 'getGuru', 'getStaf'])->where('status','=',5)->orderBy('created_at','desc')->get();
+        return $pinjam;
+    }
+
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function index()
     {
         //
-        $pinjam = Peminjaman::with(['getSiswa', 'getBarang', 'getMapel.getGuru', 'getGuru', 'getStaf'])->orderBy('created_at','desc')->get();
+        $pinjam = $this->dataBarangProses();
         return view('admin.laporan.pinjamalat')->with(['pinjam' => $pinjam]);
 
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-    public function create()
-    {
-        //
+    public function history(){
+        $kembali = $this->dataBarangDikembalikan();
+        return view('admin.laporan.historyPinjamalat')->with(['kembali' => $kembali]);
+
     }
+
 
     public function store()
     {
@@ -109,12 +119,20 @@ class PeminjamanSiswaController extends CustomController
         try {
             $pinjam = Peminjaman::find($this->request->get('id'));
             $staf = Staf::where('id_user','=',Auth::id())->first();
+            $status = $this->request->get('status');
             $pinjam->update([
-                'status' => $this->request->get('status'),
+                'status' => $status,
+                'id_staf' =>$staf->id
+
             ]);
-            if ($this->request->get('status')){
+//            if ($this->request->get('status')){
+//                $pinjam->update([
+//                    'id_staf' =>$staf->id
+//                ]);
+//            }
+            if ($status == 5){
                 $pinjam->update([
-                    'id_staf' =>$staf->id
+                    'tanggal_kembali' =>$this->now
                 ]);
             }
             return $this->jsonResponse(["msg" => 'Berhasil'], 200);

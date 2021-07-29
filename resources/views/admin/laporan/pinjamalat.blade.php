@@ -67,9 +67,7 @@
                     Mapel
                 </th>
 
-                <th>
-                    Status
-                </th>
+
                 <th>
                     Action
                 </th>
@@ -99,19 +97,27 @@
                         <td>
                             {{$g->getMapel->nama_mapel}}
                         </td>
+
                         <td>
-                            {{$g->status}}
-                        </td>
-                        <td>
-                            <a class="btn btn-primary btn-sm" onclick="konfirmasi(this)" data-status="2" data-id="{{$g->id}}" data-nama="{{$g->getBarang->nama_barang}}">Terima</a>
-                            <a class="btn btn-danger btn-sm" onclick="konfirmasi(this)" data-status="1" data-id="{{$g->id}}" data-nama="{{$g->getBarang->nama_barang}}">Tolak</a>
+                            @if($g->status == 0)
+                                <a class="btn btn-primary btn-sm" onclick="konfirmasi(this)" data-status="2" data-id="{{$g->id}}" data-nama="{{$g->getBarang->nama_barang}}">Terima</a>
+                                <a class="btn btn-danger btn-sm" onclick="konfirmasi(this)" data-status="1" data-id="{{$g->id}}" data-nama="{{$g->getBarang->nama_barang}}">Tolak</a>
+                            @elseif($g->status == 3)
+                                <a class="btn btn-primary btn-sm" onclick="konfirmasi(this)" data-status="4" data-id="{{$g->id}}" data-nama="{{$g->getBarang->nama_barang}}">Diambil</a>
+                            @elseif($g->status == 4)
+                                <a class="btn btn-primary btn-sm" onclick="konfirmasi(this)" data-status="5" data-id="{{$g->id}}" data-nama="{{$g->getBarang->nama_barang}}">Dikembalikan</a>
+                            @elseif($g->status == 1)
+                                <label>Ditolak</label>
+                            @elseif($g->status == 2)
+                                <label>Menunggu konfirmasi guru</label>
+                            @endif
+
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7" class="text-center">Tidak ada data guru</td>
+                        <td colspan="8" class="text-center">Tidak ada data pinjaman</td>
                     </tr>
-
                 @endforelse
             </table>
 
@@ -140,7 +146,12 @@
             var txtStatus = 'terima';
             if (status === 1) {
                 txtStatus = 'tolak'
+            }else if(status === 4){
+                txtStatus = 'diambil'
+            }else if(status === 5){
+                txtStatus = 'dikembalikan'
             }
+
             let dataSend = {
                 '_token': '{{csrf_token()}}',
                 'id': id,
@@ -149,7 +160,7 @@
 
             swal({
                 title: capitalizeFirstLetter(txtStatus) + " Pinjaman?",
-                text: "Apa kamu yakin ingin " + txtStatus + " peminjaman barang "+nama+"? ",
+                text: "Apa kamu yakin ingin " + txtStatus + " peminjaman barang " + nama + "? ",
                 icon: "info",
                 buttons: true,
                 primariMode: true,
@@ -167,7 +178,7 @@
                                     swal("Pinjaman berhasil " + txtStatus + " data!", {
                                         icon: "success",
                                     }).then((dat) => {
-                                        // window.location.reload();
+                                        window.location.reload();
                                     });
                                 } else {
                                     swal(data['msg'])

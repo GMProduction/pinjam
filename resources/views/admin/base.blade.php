@@ -36,7 +36,7 @@
             </a>
 
 
-            
+
             <a href="/admin">
                 <li href="#" class="nav-link t-white">
                     <i class="bx bxs-dashboard"></i>
@@ -78,10 +78,16 @@
             </a>
 
 
-            <a href="/admin/laporanpinjaman" class="mb-auto">
+            <a href="/admin/laporanpinjaman">
                 <li href="#" class="nav-link t-white">
                     <i class="bx bx-file"></i>
                     <span class="mx-2">Laporan Peminjam</span>
+                </li>
+            </a>
+            <a href="/admin/history-pinjamam" class="mb-auto">
+                <li href="#" class="nav-link t-white">
+                    <i class="bx bx-file"></i>
+                    <span class="mx-2">History Peminjam</span>
                 </li>
             </a>
 

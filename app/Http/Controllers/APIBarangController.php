@@ -25,7 +25,7 @@ class APIBarangController extends CustomController
 //        $barang     = Barang::all();
         $dataBarang = [];
         foreach ($barang as $bar) {
-            $keluar       = Peminjaman::where([['id_barang', '=', $bar->id], ['status', '=', 2]])->sum('qty');
+            $keluar       = Peminjaman::where([['id_barang', '=', $bar->id], ['status', '=', 4]])->sum('qty');
             $stok         = (int)$bar->qty - (int)$keluar;
             $dataBarang[] = Arr::add($bar, 'stok', $stok);
 
@@ -45,7 +45,7 @@ class APIBarangController extends CustomController
     {
         $barang = Barang::find($id);
 
-        $keluar = Peminjaman::where([['id_barang', '=', $id], ['status', '=', 2]])->sum('qty');
+        $keluar = Peminjaman::where([['id_barang', '=', $id], ['status', '=', 4]])->sum('qty');
 
         $stok = (int)$barang->qty - (int)$keluar;
 

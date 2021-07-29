@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BarangController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GuruController;
 use App\Http\Controllers\MapelController;
 use App\Http\Controllers\PeminjamanSiswaController;
@@ -32,12 +33,7 @@ Route::post('/register', [AuthController::class, 'register']);
 
 Route::prefix('/admin')->group(
     function () {
-        Route::get(
-            '/',
-            function () {
-                return view('admin/dashboard');
-            }
-        );
+        Route::get('/',[DashboardController::class, 'index']);
 
         Route::prefix('/barang')->group(
             function () {
@@ -62,9 +58,11 @@ Route::prefix('/admin')->group(
             function () {
                 Route::get('/', [PeminjamanSiswaController::class, 'index']);
                 Route::post('/', [PeminjamanSiswaController::class, 'konfirmasi']);
-
             }
         );
+
+        Route::get('/history-pinjamam', [PeminjamanSiswaController::class, 'history']);
+
     }
 );
 
