@@ -93,7 +93,7 @@ class APIPinjamGuruController extends CustomController
         if ($pinjam){
             $guru = Guru::where('id_user','=',Auth::id())->first();
             $pinjam->update([
-                'status' => 1,
+                'status' => 3,
                 'id_guru' => $guru->id
             ]);
             return $this->jsonResponse($pinjam);
