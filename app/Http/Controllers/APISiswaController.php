@@ -23,23 +23,45 @@ class APISiswaController extends CustomController
     {
         //
         try {
-        $user = User::with(['getSiswa'])->where('roles','=','siswa')->find(Auth::id());
-        if ($this->request->isMethod('POST')){
-            $this->request->validate([
-                'nama' => 'required|string',
-                'alamat' => 'required|string',
-                'tanggal' =>'required',
-                'kelas' => 'required',
-                'no_hp' => 'required'
-            ]);
-            $siswa = Siswa::where('id_user','=',$user->id);
-            $siswa->update($this->request->all());
-            $user = User::with(['getSiswa'])->find($user->id);
-        }
+            $user = User::with(['getSiswa'])->where('roles', '=', 'siswa')->find(Auth::id());
+            if ($this->request->isMethod('POST')) {
+                $this->request->validate(
+                    [
+                        'nama'    => 'required|string',
+                        'alamat'  => 'required|string',
+                        'tanggal' => 'required',
+                        'kelas'   => 'required',
+                        'no_hp'   => 'required',
+                    ]
+                );
+                $siswa = Siswa::where('id_user', '=', $user->id);
+                $siswa->update($this->request->all());
+                $user = User::with(['getSiswa'])->find($user->id);
+            }
 
             return $this->jsonResponse($user, 200);
         } catch (\Exception $er) {
             return $this->jsonResponse('error '.$er, 500);
+        }
+    }
+
+    public function updateImage()
+    {
+        try {
+            $image = $this->request->files->get('image');
+            $data  = Siswa::find(Auth::id());
+            if ($image) {
+                if ($data) {
+                    if (file_exists('../public'.$data->image)) {
+                        unlink('../public'.$data->image);
+                    }
+                } else {
+
+                }
+            }
+
+        } catch (\Exception $err) {
+            return $this->jsonResponse(['msg' => $err], 500);
         }
     }
 
@@ -56,7 +78,8 @@ class APISiswaController extends CustomController
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -67,7 +90,8 @@ class APISiswaController extends CustomController
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -79,7 +103,8 @@ class APISiswaController extends CustomController
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -91,8 +116,9 @@ class APISiswaController extends CustomController
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function update($id)
@@ -104,7 +130,8 @@ class APISiswaController extends CustomController
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

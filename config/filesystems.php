@@ -53,6 +53,20 @@ return [
             'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
         ],
 
+        'imagesSiswa' => [
+            'driver' => 'local',
+            'root' => public_path() . '/images/siswa',
+            'url' => env('APP_URL') . '/storage',
+            'visibility' => 'public',
+        ],
+
+        'imagesGuru' => [
+            'driver' => 'local',
+            'root' => public_path() . '/images/guru',
+            'url' => env('APP_URL') . '/storage',
+            'visibility' => 'public',
+        ],
+
     ],
 
     /*
