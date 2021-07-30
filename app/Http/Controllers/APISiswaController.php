@@ -45,21 +45,32 @@ class APISiswaController extends CustomController
         }
     }
 
-    public function updateImage()
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function updateProfileImage()
     {
         try {
             $image = $this->request->files->get('image');
             $data  = Siswa::find(Auth::id());
-            if ($image) {
-                if ($data) {
+            $string = null;
+
+            if ($image || $image != '') {
+                if ($data && $data->image) {
                     if (file_exists('../public'.$data->image)) {
                         unlink('../public'.$data->image);
                     }
 
-                } else {
-
+                }
+                $string = '/images/siswa/'.$image;
+                $this->uploadImage('image', $image, 'imagesSiswa');
+            }else{
+                if ($data && $data->image) {
+                    $string = $data->image;
                 }
             }
+
+            return $this->jsonResponse(['msg' => 'Berhasil memperbarui foto']);
 
         } catch (\Exception $err) {
             return $this->jsonResponse(['msg' => $err], 500);

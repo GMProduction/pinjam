@@ -49,13 +49,28 @@ Route::group(
     ['middleware' => ['auth:sanctum']],
     function () {
         Route::post('/logout', [AuthController::class, 'logout']);
-        Route::match(['get', 'post'], '/siswa', [APISiswaController::class, 'index']);
-        Route::match(['get', 'post'], '/guru', [APIGuruController::class, 'index']);
-        Route::get( '/pinjam', [APIPeminjamanSiswaController::class, 'index']);
-        Route::post( '/pinjam', [APIPeminjamanSiswaController::class, 'store']);
-        Route::get( '/pinjam/{id}', [APIPeminjamanSiswaController::class, 'show']);
-        Route::get( '/pinjam-guru', [APIPinjamGuruController::class, 'index']);
-        Route::get( '/pinjam-guru/{id}', [APIPinjamGuruController::class, 'show']);
-        Route::post( '/pinjam-guru/{id}', [APIPinjamGuruController::class, 'update']);
+        Route::prefix('/siswa')->group(function (){
+            Route::match(['get', 'post'], '/', [APISiswaController::class, 'index']);
+            Route::post('/update-profile',[APISiswaController::class,'updateProfileImage']);
+        });
+
+        Route::prefix('/guru')->group(function (){
+            Route::match(['get', 'post'], '/guru', [APIGuruController::class, 'index']);
+            Route::post('/update-profile',[APIGuruController::class,'updateProfileImage']);
+        });
+
+        Route::prefix('/pinjam')->group(function (){
+            Route::get( '/', [APIPeminjamanSiswaController::class, 'index']);
+            Route::post( '/', [APIPeminjamanSiswaController::class, 'store']);
+            Route::get( '/{id}', [APIPeminjamanSiswaController::class, 'show']);
+        });
+
+        Route::prefix('/pinjam-guru')->group(function (){
+            Route::get( '/', [APIPinjamGuruController::class, 'index']);
+            Route::get( '/{id}', [APIPinjamGuruController::class, 'show']);
+            Route::post( '/{id}', [APIPinjamGuruController::class, 'update']);
+        });
+
+
     }
 );

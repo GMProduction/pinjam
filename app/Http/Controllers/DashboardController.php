@@ -13,7 +13,7 @@ class DashboardController extends Controller
      */
     public function dataBarangProses()
     {
-        $proses = Peminjaman::with(['getSiswa', 'getBarang', 'getMapel.getGuru', 'getGuru', 'getStaf'])->where([['status', '!=', 5], ['status', '!=', 1],['status', '!=', 4]])->orderBy('created_at', 'desc')->limit(
+        $proses = Peminjaman::with(['getSiswa', 'getBarang', 'getMapel.getGuru', 'getGuru', 'getStaf'])->where([['status', '!=', 5], ['status', '!=', 1],['status', '!=', 4],['status','!=',11]])->orderBy('created_at', 'desc')->limit(
             10
         )->get();
 

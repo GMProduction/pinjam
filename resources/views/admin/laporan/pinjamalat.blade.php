@@ -107,7 +107,9 @@
                             @elseif($g->status == 4)
                                 <a class="btn btn-primary btn-sm" onclick="konfirmasi(this)" data-status="5" data-id="{{$g->id}}" data-nama="{{$g->getBarang->nama_barang}}">Dikembalikan</a>
                             @elseif($g->status == 1)
-                                <label>Ditolak</label>
+                                <label>Ditolak Staf</label>
+                            @elseif($g->status == 11)
+                                <label>Ditolak Guru</label>
                             @elseif($g->status == 2)
                                 <label>Menunggu konfirmasi guru</label>
                             @endif

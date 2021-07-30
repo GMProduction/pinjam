@@ -14,6 +14,7 @@ class Guru extends Model
         'id_user',
         'alamat',
         'nama',
-        'tanggal'
+        'tanggal',
+        'image'
     ];
 }

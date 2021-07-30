@@ -20,7 +20,7 @@ class PeminjamanSiswaController extends CustomController
 {
 
     public function dataBarangProses(){
-        $pinjam = Peminjaman::with(['getSiswa', 'getBarang', 'getMapel.getGuru', 'getGuru', 'getStaf'])->where([['status','!=',5],['status','!=',1]])->orderBy('created_at','desc')->get();
+        $pinjam = Peminjaman::with(['getSiswa', 'getBarang', 'getMapel.getGuru', 'getGuru', 'getStaf'])->where([['status','!=',5],['status','!=',1], ['status','!=',11]])->orderBy('created_at','desc')->get();
         return $pinjam;
     }
 

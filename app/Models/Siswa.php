@@ -16,7 +16,9 @@ class Siswa extends Model
         'nama',
         'tanggal',
         'kelas',
-        'no_hp'
+        'no_hp',
+        'image'
+
     ];
 
 }

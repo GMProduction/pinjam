@@ -35,4 +35,36 @@ class APIGuruController extends CustomController
             return $this->jsonResponse('error '.$er, 500);
         }
     }
+
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function updateProfileImage()
+    {
+        try {
+            $image = $this->request->files->get('image');
+            $data  = Guru::find(Auth::id());
+            $string = null;
+
+            if ($image || $image != '') {
+                if ($data && $data->image) {
+                    if (file_exists('../public'.$data->image)) {
+                        unlink('../public'.$data->image);
+                    }
+
+                }
+                $string = '/images/guru/'.$image;
+                $this->uploadImage('image', $image, 'imagesGuru');
+            }else{
+                if ($data && $data->image) {
+                    $string = $data->image;
+                }
+            }
+
+            return $this->jsonResponse(['msg' => 'Berhasil memperbarui foto']);
+
+        } catch (\Exception $err) {
+            return $this->jsonResponse(['msg' => $err], 500);
+        }
+    }
 }
