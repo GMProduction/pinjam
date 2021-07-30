@@ -55,6 +55,7 @@ class APISiswaController extends CustomController
                     if (file_exists('../public'.$data->image)) {
                         unlink('../public'.$data->image);
                     }
+
                 } else {
 
                 }

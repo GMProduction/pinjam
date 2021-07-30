@@ -54,8 +54,8 @@ Route::group(
         Route::get( '/pinjam', [APIPeminjamanSiswaController::class, 'index']);
         Route::post( '/pinjam', [APIPeminjamanSiswaController::class, 'store']);
         Route::get( '/pinjam/{id}', [APIPeminjamanSiswaController::class, 'show']);
-        Route::get( '/pinjam-guru', [APIPeminjamanSiswaController::class, 'index']);
-        Route::get( '/pinjam-guru/{id}', [APIPeminjamanSiswaController::class, 'show']);
-        Route::post( '/pinjam-guru/{id}', [APIPeminjamanSiswaController::class, 'update']);
+        Route::get( '/pinjam-guru', [APIPinjamGuruController::class, 'index']);
+        Route::get( '/pinjam-guru/{id}', [APIPinjamGuruController::class, 'show']);
+        Route::post( '/pinjam-guru/{id}', [APIPinjamGuruController::class, 'update']);
     }
 );

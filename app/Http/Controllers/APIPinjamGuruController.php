@@ -90,10 +90,11 @@ class APIPinjamGuruController extends CustomController
                             ->whereHas('getMapel.getGuru', function ($query){
                                 return $query->where('id_user','=',Auth::id());
                             })->orderBy('created_at','desc')->find($id);
+        $status = $this->request->get('status');
         if ($pinjam){
             $guru = Guru::where('id_user','=',Auth::id())->first();
             $pinjam->update([
-                'status' => 3,
+                'status' => $status,
                 'id_guru' => $guru->id
             ]);
             return $this->jsonResponse($pinjam);
