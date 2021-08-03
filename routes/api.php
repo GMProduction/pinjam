@@ -51,12 +51,12 @@ Route::group(
         Route::post('/logout', [AuthController::class, 'logout']);
         Route::prefix('/siswa')->group(function (){
             Route::match(['get', 'post'], '/', [APISiswaController::class, 'index']);
-            Route::post('/update-profile',[APISiswaController::class,'updateProfileImage']);
+            Route::post('/update-image',[APISiswaController::class,'updateProfileImage']);
         });
 
         Route::prefix('/guru')->group(function (){
             Route::match(['get', 'post'], '/guru', [APIGuruController::class, 'index']);
-            Route::post('/update-profile',[APIGuruController::class,'updateProfileImage']);
+            Route::post('/update-image',[APIGuruController::class,'updateProfileImage']);
         });
 
         Route::prefix('/pinjam')->group(function (){

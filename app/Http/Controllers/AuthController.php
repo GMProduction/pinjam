@@ -42,7 +42,7 @@ class AuthController extends CustomController
                     'username' => $r->get('username'),
                 ]
             );
-            if (strpos($r->get('password'), '*') !== false) {
+            if (strpos($r->get('password'), '*') === false) {
                 $user->update(
                     [
                         'password' => Hash::make($field['password']),
