@@ -34,9 +34,6 @@ Dashboard
                             Mapel
                         </th>
 
-                        <th>
-                            Status
-                        </th>
 
                         <th>
                             Action
@@ -51,9 +48,6 @@ Dashboard
                             </td>
                             <td>
                                 {{$g->tanggal_pinjam}}
-                            </td>
-                            <td>
-                                {{$g->tanggal_kembali ?? '-'}}
                             </td>
                             <td>
                                 {{$g->getBarang->nama_barang}}
@@ -135,9 +129,6 @@ Dashboard
                             {{$g->tanggal_pinjam}}
                         </td>
                         <td>
-                            {{$g->tanggal_kembali ?? '-'}}
-                        </td>
-                        <td>
                             {{$g->getBarang->nama_barang}}
                         </td>
                         <td>
@@ -149,7 +140,6 @@ Dashboard
                         <td>
                             {{$g->getMapel->nama_mapel}}
                         </td>
-
                         <td>
                             @if($g->status == 0)
                                 <a class="btn btn-primary btn-sm" onclick="konfirmasi(this)" data-status="2" data-id="{{$g->id}}" data-nama="{{$g->getBarang->nama_barang}}">Terima</a>
@@ -183,5 +173,73 @@ Dashboard
 
 @section('script')
 
+<script>
+    function capitalizeFirstLetter(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
 
+    function konfirmasi(data) {
+        var nama = $(data).data('nama');
+        var status = $(data).data('status');
+        var id = $(data).data('id');
+
+        var txtStatus = 'terima';
+        if (status === 1) {
+            txtStatus = 'tolak'
+        }else if(status === 4){
+            txtStatus = 'diambil'
+        }else if(status === 5){
+            txtStatus = 'dikembalikan'
+        }
+
+        let dataSend = {
+            '_token': '{{csrf_token()}}',
+            'id': id,
+            'status': status
+        };
+
+        swal({
+            title: capitalizeFirstLetter(txtStatus) + " Pinjaman?",
+            text: "Apa kamu yakin ingin " + txtStatus + " peminjaman barang " + nama + "? ",
+            icon: "info",
+            buttons: true,
+            primariMode: true,
+        })
+            .then((res) => {
+                if (res) {
+                    $.ajax({
+                        type: "POST",
+                        url: '/admin/laporanpinjaman',
+                        data: dataSend,
+                        headers: {
+                            'Accept': "application/json"
+                        },
+                        success: function (data, textStatus, xhr) {
+                            if (xhr.status === 200) {
+                                swal("Pinjaman berhasil " + txtStatus + " data!", {
+                                    icon: "success",
+                                }).then((dat) => {
+                                    window.location.reload();
+                                });
+                            } else {
+                                swal(data['msg'])
+                            }
+                            console.log()
+                        },
+                        complete: function (xhr, textStatus) {
+                            console.log(xhr.status);
+                            console.log(textStatus);
+                        },
+                        error: function (error, xhr, textStatus) {
+                            console.log("LOG ERROR", error.responseJSON.errors);
+                            console.log("LOG ERROR", error.responseJSON.errors[Object.keys(error.responseJSON.errors)[0]][0]);
+                            console.log(xhr.status);
+                            console.log(textStatus);
+                            swal(error.responseJSON.errors[Object.keys(error.responseJSON.errors)[0]][0])
+                        }
+                    })
+                }
+            });
+    }
+</script>
 @endsection

@@ -21,7 +21,8 @@ class APIBarangController extends CustomController
     {
         $name = $request->get('name');
         $offset = $request->get('offset') ?? 0;
-        $barang =  Barang::where('nama_barang', 'like', '%'.$name.'%')->offset($offset)->limit(4)->get();
+        $limit = $request->get('limit') ?? 4;
+        $barang =  Barang::where('nama_barang', 'like', '%'.$name.'%')->offset($offset)->limit($limit)->get();
 //        $barang     = Barang::all();
         $dataBarang = [];
         foreach ($barang as $bar) {

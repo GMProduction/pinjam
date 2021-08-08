@@ -104,6 +104,7 @@ class AuthController extends CustomController
                         'nama'    => $r->get('nama'),
                         'alamat'  => $r->get('alamat'),
                         'tanggal' => $r->get('tanggal'),
+                        'image'   => null,
                     ]
                 );
             } else {
@@ -113,6 +114,7 @@ class AuthController extends CustomController
                         'nama'    => $r->get('nama'),
                         'alamat'  => $r->get('alamat'),
                         'tanggal' => $r->get('tanggal'),
+                        'image'   => null,
                     ]
                 );
             }
@@ -126,6 +128,7 @@ class AuthController extends CustomController
                         'tanggal' => $r->get('tanggal'),
                         'kelas'   => $r->get('kelas'),
                         'no_hp'   => $r->get('no_hp'),
+                        'image'   => null,
                     ]
                 );
             } else {
@@ -137,6 +140,27 @@ class AuthController extends CustomController
                         'tanggal' => $r->get('tanggal'),
                         'kelas'   => $r->get('kelas'),
                         'no_hp'   => $r->get('no_hp'),
+                        'image'   => null,
+                    ]
+                );
+            }
+        } else {
+            if ($r->get('id')) {
+                $member = $models::where('id_user', '=', $user->id)->first();
+                $member->update(
+                    [
+                        'nama'    => $r->get('nama'),
+                        'alamat'  => $r->get('alamat'),
+                        'tanggal' => $r->get('tanggal'),
+                    ]
+                );
+            } else {
+                $member = $models::create(
+                    [
+                        'id_user' => $user->id,
+                        'nama'    => $r->get('nama'),
+                        'alamat'  => $r->get('alamat'),
+                        'tanggal' => $r->get('tanggal'),
                     ]
                 );
             }
@@ -162,16 +186,15 @@ class AuthController extends CustomController
 
             $user = User::where('username', $field['username'])->first();
             $uri  = $_SERVER['REQUEST_URI'];
-            if ( ! $user || ! Hash::check($field['password'], $user->password)) {
+            if ( ! $user || ! Hash::check($field['password'], $user->password) || $user->roles == 'staf') {
 //            throw ValidationException::withMessages([
 //                'username' => ['The provided credentials are incorrect.'],
 //            ]);
                 if (strpos($uri, 'api')) {
                     return response()->json(
                         [
-                            'status' => 401,
                             'msg'    => 'Login gagal',
-                        ]
+                        ], 401
                     );
                 } else {
                     $data = [
@@ -196,7 +219,10 @@ class AuthController extends CustomController
                 return response()->json(
                     [
                         'status' => 200,
-                        'msg'    => $token,
+                        'data'    => [
+                            'token' => $token,
+                            'role' => $user->roles
+                        ],
                     ]
                 );
 
@@ -243,7 +269,10 @@ class AuthController extends CustomController
                 'password' => $request['password'],
             ];
             if ($this->isAuth($credentials)) {
-                $redirect = '/admin';
+                $redirect = '';
+                if (Auth::user()->roles == 'staf') {
+                    $redirect = '/admin';
+                }
 
                 return redirect($redirect);
             }

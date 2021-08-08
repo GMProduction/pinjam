@@ -7,6 +7,7 @@ use App\Http\Controllers\GuruController;
 use App\Http\Controllers\MapelController;
 use App\Http\Controllers\PeminjamanSiswaController;
 use App\Http\Controllers\SiswaController;
+use App\Http\Middleware\AdminMiddleware;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -31,7 +32,7 @@ Route::match(['post', 'get'], '/', [AuthController::class, 'loginAdmin']);
 Route::get('/logout',[AuthController::class,'logoutAdmin']);
 Route::post('/register', [AuthController::class, 'register']);
 
-Route::prefix('/admin')->group(
+Route::prefix('/admin')->middleware([AdminMiddleware::class])->group(
     function () {
         Route::get('/',[DashboardController::class, 'index']);
 

@@ -22,28 +22,23 @@ class APISiswaController extends CustomController
      */
     public function index()
     {
-        //
-        try {
-            $user = User::with(['getSiswa'])->where('roles', '=', 'siswa')->find(Auth::id());
-            if ($this->request->isMethod('POST')) {
-                $this->request->validate(
-                    [
-                        'nama'    => 'required|string',
-                        'alamat'  => 'required|string',
-                        'tanggal' => 'required',
-                        'kelas'   => 'required',
-                        'no_hp'   => 'required',
-                    ]
-                );
-                $siswa = Siswa::where('id_user', '=', $user->id);
-                $siswa->update($this->request->all());
-                $user = User::with(['getSiswa'])->find($user->id);
-            }
-
-            return $this->jsonResponse($user, 200);
-        } catch (\Exception $er) {
-            return $this->jsonResponse('error '.$er, 500);
+        $user = User::with(['getSiswa'])->where('roles', '=', 'siswa')->find(Auth::id());
+        if ($this->request->isMethod('POST')) {
+            $this->request->validate(
+                [
+                    'nama'    => 'required|string',
+                    'alamat'  => 'required|string',
+                    'tanggal' => 'required',
+                    'kelas'   => 'required',
+                    'no_hp'   => 'required',
+                ]
+            );
+            $siswa = Siswa::where('id_user', '=', $user->id);
+            $siswa->update($this->request->all());
+            $user = User::with(['getSiswa'])->find($user->id);
         }
+
+        return $this->jsonResponse($user, 200);
     }
 
     /**

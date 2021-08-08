@@ -15,7 +15,6 @@ class APIGuruController extends CustomController
     //
     public function index()
     {
-        try {
             $user = User::with(['getGuru'])->where('roles','=','guru')->find(Auth::id());
             if ($this->request->isMethod('POST')) {
                 $this->request->validate(
@@ -32,9 +31,7 @@ class APIGuruController extends CustomController
 
             return $this->jsonResponse($user, 200);
 
-        } catch (\Exception $er) {
-            return $this->jsonResponse('error '.$er, 500);
-        }
+
     }
 
     /**
@@ -108,8 +105,9 @@ class APIGuruController extends CustomController
                     }
 
                 }
-                $string = '/images/guru/'.$image;
-                $this->uploadImage('image', $image, 'imagesGuru');
+                $textImg = $this->generateImageName('image');
+                $string = '/images/guru/'.$textImg;
+                $this->uploadImage('image', $textImg, 'imagesGuru');
                 $data->getGuru->update([
                     'image' => $string
                 ]);
@@ -119,7 +117,7 @@ class APIGuruController extends CustomController
                 }
             }
 
-            return $this->jsonResponse(['msg' => 'Berhasil memperbarui foto']);
+            return $this->jsonResponse(['msg' => 'Berhasil memperbarui foto', 'data' => $string]);
 
         } catch (\Exception $err) {
             return $this->jsonResponse(['msg' => $err->getMessage()], 500);

@@ -50,9 +50,6 @@
                     Tanggal Pinjam
                 </th>
                 <th>
-                    Tanggal Kembali
-                </th>
-                <th>
                     Nama Barang
                 </th>
                 <th>
@@ -81,9 +78,6 @@
                         </td>
                         <td>
                             {{$g->tanggal_pinjam}}
-                        </td>
-                        <td>
-                            {{$g->tanggal_kembali ?? '-'}}
                         </td>
                         <td>
                             {{$g->getBarang->nama_barang}}

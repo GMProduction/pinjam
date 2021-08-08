@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 
 /**
@@ -25,9 +26,39 @@ class APIPinjamGuruController extends CustomController
     {
         //
         $pinjam = Peminjaman::with(['getSiswa', 'getBarang', 'getMapel.getGuru', 'getGuru', 'getStaf'])
-                            ->whereHas('getMapel.getGuru', function ($query){
-                                return $query->where('id_user','=',Auth::id());
-                            })->orderBy('created_at','desc')->where('id_staf','!=',null)->get();
+                            ->where('status', '=', 2)->whereHas(
+                'getMapel.getGuru',
+                function ($query) {
+                    $query->where('id_user', '=', Auth::id());
+                }
+            )->get();
+
+        return $pinjam;
+    }
+
+    public function history()
+    {
+        $pinjam = Peminjaman::getHistory()->with(['getSiswa', 'getBarang', 'getMapel.getGuru', 'getGuru', 'getStaf'])
+                                          ->whereHas(
+                'getMapel.getGuru',
+                function ($query) {
+                    $query->where('id_user', '=', Auth::id());
+                }
+            )->get();
+        $dataPinjam = [];
+        foreach ($pinjam as $key => $p){
+            $dataPinjam[$key] = $p;
+            $status = $p->status;
+            $txtStatus = 'Ditolak Guru';
+            if ($status == 3){
+                $txtStatus = 'Menunggu Ambil';
+            }elseif ($status == 4){
+                $txtStatus = 'Dipinjam';
+            }elseif ($status == 5){
+                $txtStatus = 'Dikembalikan';
+            }
+            $dataPinjam[$key] = Arr::add($dataPinjam[$key],'txt_status',$txtStatus);
+        }
         return $pinjam;
     }
 
@@ -44,7 +75,8 @@ class APIPinjamGuruController extends CustomController
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -61,16 +93,21 @@ class APIPinjamGuruController extends CustomController
     {
         //
         $pinjam = Peminjaman::with(['getSiswa', 'getBarang', 'getMapel.getGuru', 'getGuru', 'getStaf'])
-                            ->whereHas('getMapel.getGuru', function ($query){
-                                return $query->where('id_user','=',Auth::id());
-                            })->orderBy('created_at','desc')->find($id);
-        return $this->jsonResponse($pinjam,200);
+                            ->whereHas(
+                                'getMapel.getGuru',
+                                function ($query) {
+                                    return $query->where('id_user', '=', Auth::id());
+                                }
+                            )->orderBy('created_at', 'desc')->find($id);
+
+        return $this->jsonResponse($pinjam, 200);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -87,25 +124,36 @@ class APIPinjamGuruController extends CustomController
     {
         //
         $pinjam = Peminjaman::with(['getMapel.getGuru', 'getGuru'])
-                            ->whereHas('getMapel.getGuru', function ($query){
-                                return $query->where('id_user','=',Auth::id());
-                            })->orderBy('created_at','desc')->find($id);
+                            ->whereHas(
+                                'getMapel.getGuru',
+                                function ($query) {
+                                    return $query->where('id_user', '=', Auth::id());
+                                }
+                            )->orderBy('created_at', 'desc')->find($id);
+        $fild = $this->request->validate([
+           "status" => 'required'
+        ]);
         $status = $this->request->get('status');
-        if ($pinjam){
-            $guru = Guru::where('id_user','=',Auth::id())->first();
-            $pinjam->update([
-                'status' => $status,
-                'id_guru' => $guru->id
-            ]);
+        if ($pinjam) {
+            $guru = Guru::where('id_user', '=', Auth::id())->first();
+            $pinjam->update(
+                [
+                    'status'  => $fild['status'],
+                    'id_guru' => $guru->id,
+                ]
+            );
+
             return $this->jsonResponse($pinjam);
         }
+
         return $this->jsonResponse('Data tidak ditemukan');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

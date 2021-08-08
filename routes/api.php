@@ -28,7 +28,6 @@ Route::post('/register', [AuthController::class, 'register']);
 
 Route::post('/login', [AuthController::class, 'login']);
 
-Route::post('/register', [AuthController::class, 'register']);
 Route::get('/barang', [APIBarangController::class, 'getAllProduct']);
 Route::get('/barang/{id}', [APIBarangController::class, 'getProductById']);
 //Route::get('/barang/cari/nama', [APIBarangController::class, 'getProductByName']);
@@ -55,7 +54,7 @@ Route::group(
         });
 
         Route::prefix('/guru')->group(function (){
-            Route::match(['get', 'post'], '/guru', [APIGuruController::class, 'index']);
+            Route::match(['get', 'post'], '/', [APIGuruController::class, 'index']);
             Route::post('/update-image',[APIGuruController::class,'updateProfileImage']);
         });
 
@@ -67,6 +66,7 @@ Route::group(
 
         Route::prefix('/pinjam-guru')->group(function (){
             Route::get( '/', [APIPinjamGuruController::class, 'index']);
+            Route::get( '/history', [APIPinjamGuruController::class, 'history']);
             Route::get( '/{id}', [APIPinjamGuruController::class, 'show']);
             Route::post( '/{id}', [APIPinjamGuruController::class, 'update']);
         });

@@ -57,4 +57,8 @@ class Peminjaman extends Model
         return $this->belongsTo(Mapel::class, 'id_mapel');
     }
 
+    public static function getHistory(){
+        return Peminjaman::where([['status','!=',0],['status','!=',2]]);
+    }
+
 }

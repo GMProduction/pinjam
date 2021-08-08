@@ -10,6 +10,7 @@ use App\Models\Siswa;
 use App\Models\Staf;
 use http\Env\Response;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 
 /**
@@ -30,7 +31,27 @@ class APIPeminjamanSiswaController extends CustomController
                                 return $query->where('id_user','=',Auth::id());
                             })
                             ->orderBy('created_at','desc')->get();
-        return $pinjam;
+        $dataPinjam = [];
+        foreach ($pinjam as $key => $p){
+            $dataPinjam[$key] = $p;
+            $status = $p->status;
+            $txtStatus = 'Menunggu Staf';
+            if ($status == 1){
+                $txtStatus = 'Ditolak';
+            }elseif ($status == 11){
+                $txtStatus = 'Ditolak Guru';
+            }elseif ($status == 2){
+                $txtStatus = 'Menunggu Guru';
+            }elseif ($status == 3){
+                $txtStatus = 'Menunggu Ambil';
+            }elseif ($status == 4){
+                $txtStatus = 'Dipinjam';
+            }elseif ($status == 5){
+                $txtStatus = 'Dikembalikan';
+            }
+            $dataPinjam[$key] = Arr::add($dataPinjam[$key],'txt_status',$txtStatus);
+        }
+        return $dataPinjam;
 
     }
 
@@ -73,9 +94,11 @@ class APIPeminjamanSiswaController extends CustomController
             ]
         );
 
+        $siswa = Siswa::where('id_user','=',Auth::id())->first();
+
         return Peminjaman::create(
             [
-                'id_siswa'       => Auth::id(),
+                'id_siswa'       => $siswa->id,
                 'qty'            => $this->request->get('qty'),
                 'id_barang'      => $barang->id,
                 'tanggal_pinjam' => $this->request->get('tanggal_pinjam'),
