@@ -22,17 +22,17 @@
                 <div style="width: 300px">
                     <a>Status</a>
                     <div class="d-flex">
-
-                        <select class="form-select me-2" aria-label="Default select example" name="idguru">
-                            <option selected>Status</option>
-                            <option value="1">Semua</option>
-                            <option value="2">Menunggu Staff</option>
-                            <option value="3">Menunggu Guru</option>
-                            <option value="4">Menunggu Siswa Ambil</option>
-                            <option value="5">Di pinjam</option>
-                            <option value="6">Di kembalikan</option>
-                        </select>
-
+                        <form>
+                            <select class="form-select me-2" aria-label="Default select example" name="idguru">
+                                <option selected>Status</option>
+                                <option value="1">Semua</option>
+                                <option value="2">Menunggu Staff</option>
+                                <option value="3">Menunggu Guru</option>
+                                <option value="4">Menunggu Siswa Ambil</option>
+                                <option value="5">Di pinjam</option>
+                                <option value="6">Di kembalikan</option>
+                            </select>
+                        </form>
                         <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
                                 data-bs-target="#tambahsiswa">Cetak
                         </button>
@@ -142,9 +142,9 @@
             var txtStatus = 'terima';
             if (status === 1) {
                 txtStatus = 'tolak'
-            }else if(status === 4){
+            } else if (status === 4) {
                 txtStatus = 'diambil'
-            }else if(status === 5){
+            } else if (status === 5) {
                 txtStatus = 'dikembalikan'
             }
 
