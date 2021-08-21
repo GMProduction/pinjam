@@ -22,15 +22,14 @@
                 <div style="width: 300px">
                     <a>Status</a>
                     <div class="d-flex">
-                        <form>
-                            <select class="form-select me-2" aria-label="Default select example" name="idguru">
-                                <option selected>Status</option>
-                                <option value="1">Semua</option>
-                                <option value="2">Menunggu Staff</option>
-                                <option value="3">Menunggu Guru</option>
-                                <option value="4">Menunggu Siswa Ambil</option>
-                                <option value="5">Di pinjam</option>
-                                <option value="6">Di kembalikan</option>
+                        <form id="formCari">
+                            <select class="form-select me-2" aria-label="Default select example" id="statusCari" name="status">
+                                <option value="">Semua</option>
+                                <option value="Menunggu Staff">Menunggu Staff</option>
+                                <option value="Menunggu Guru">Menunggu Guru</option>
+                                <option value="Menunggu Siswa Ambil">Menunggu Siswa Ambil</option>
+                                <option value="Di pinjam">Di pinjam</option>
+                                <option value="Di kembalikan">Di kembalikan</option>
                             </select>
                         </form>
                         <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
@@ -116,7 +115,9 @@
                     </tr>
                 @endforelse
             </table>
-
+            <div class="d-flex justify-content-end">
+                {{$pinjam->links()}}
+            </div>
         </div>
 
 
@@ -127,12 +128,17 @@
 @section('script')
     <script>
         $(document).ready(function () {
+            $('#statusCari').val('{{request('status')}}')
 
         })
 
         function capitalizeFirstLetter(string) {
             return string.charAt(0).toUpperCase() + string.slice(1);
         }
+
+        $(document).on('change', '#statusCari', function () {
+            document.getElementById('formCari').submit();
+        })
 
         function konfirmasi(data) {
             var nama = $(data).data('nama');

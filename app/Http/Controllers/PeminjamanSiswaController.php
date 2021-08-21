@@ -19,13 +19,38 @@ use Illuminate\Support\Facades\Auth;
 class PeminjamanSiswaController extends CustomController
 {
 
-    public function dataBarangProses(){
-        $pinjam = Peminjaman::with(['getSiswa', 'getBarang', 'getMapel.getGuru', 'getGuru', 'getStaf'])->where([['status','!=',5],['status','!=',1], ['status','!=',11]])->orderBy('created_at','desc')->get();
+    public function dataBarangProses()
+    {
+        $pinjam     = Peminjaman::with(['getSiswa', 'getBarang', 'getMapel.getGuru', 'getGuru', 'getStaf'])->where([['status', '!=', 5]])->orderBy('created_at', 'desc');
+        $status     = $this->request->get('status');
+        $codeStatus = null;
+
+        if ($status) {
+            if ($status == 'Menunggu Staff') {
+                $codeStatus = 0;
+            } elseif ($status == 'Menunggu Guru') {
+                $codeStatus = 2;
+            } elseif ($status == 'Menunggu Siswa Ambil') {
+                $codeStatus = 3;
+            } elseif ($status == 'Di pinjam') {
+                $codeStatus = 4;
+            } elseif ($status == 'Di kembalikan') {
+                $codeStatus = 5;
+            }
+            $pinjam->where('status','=',$codeStatus);
+
+        }
+
+        $pinjam = $pinjam->paginate(10)->withQueryString();
+
+//        $pinjam = Peminjaman::with(['getSiswa', 'getBarang', 'getMapel.getGuru', 'getGuru', 'getStaf'])->where([['status','!=',5],['status','!=',1], ['status','!=',11]])->orderBy('created_at','desc')->get();
         return $pinjam;
     }
 
-    public function dataBarangDikembalikan(){
-        $pinjam = Peminjaman::with(['getSiswa', 'getBarang', 'getMapel.getGuru', 'getGuru', 'getStaf'])->where('status','=',5)->orderBy('created_at','desc')->get();
+    public function dataBarangDikembalikan()
+    {
+        $pinjam = Peminjaman::with(['getSiswa', 'getBarang', 'getMapel.getGuru', 'getGuru', 'getStaf'])->where('status', '=', 5)->orderBy('created_at', 'desc')->paginate(10);
+
         return $pinjam;
     }
 
@@ -36,6 +61,7 @@ class PeminjamanSiswaController extends CustomController
     {
         //
         $pinjam = $this->dataBarangProses();
+
         return view('admin.laporan.pinjamalat')->with(['pinjam' => $pinjam]);
 
     }
@@ -43,12 +69,13 @@ class PeminjamanSiswaController extends CustomController
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-    public function history(){
+    public function history()
+    {
         $kembali = $this->dataBarangDikembalikan();
+
         return view('admin.laporan.historyPinjamalat')->with(['kembali' => $kembali]);
 
     }
-
 
     public function store()
     {
@@ -114,31 +141,37 @@ class PeminjamanSiswaController extends CustomController
     /**
      * @return \Illuminate\Http\JsonResponse
      */
-    public function konfirmasi(){
+    public function konfirmasi()
+    {
 
         try {
             $pinjam = Peminjaman::find($this->request->get('id'));
-            $staf = Staf::where('id_user','=',Auth::id())->first();
+            $staf   = Staf::where('id_user', '=', Auth::id())->first();
             $status = $this->request->get('status');
-            $pinjam->update([
-                'status' => $status,
-                'id_staf' =>$staf->id
+            $pinjam->update(
+                [
+                    'status'  => $status,
+                    'id_staf' => $staf->id,
 
-            ]);
+                ]
+            );
 //            if ($this->request->get('status')){
 //                $pinjam->update([
 //                    'id_staf' =>$staf->id
 //                ]);
 //            }
-            if ($status == 5){
-                $pinjam->update([
-                    'tanggal_kembali' =>$this->now
-                ]);
+            if ($status == 5) {
+                $pinjam->update(
+                    [
+                        'tanggal_kembali' => $this->now,
+                    ]
+                );
             }
+
             return $this->jsonResponse(["msg" => 'Berhasil'], 200);
 
-        }catch (\Exception $er){
-           return $this->jsonResponse(["msg" => $er->getMessage()], 500);
+        } catch (\Exception $er) {
+            return $this->jsonResponse(["msg" => $er->getMessage()], 500);
         }
     }
 

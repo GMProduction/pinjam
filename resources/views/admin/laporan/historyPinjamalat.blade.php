@@ -79,7 +79,9 @@
                     </tr>
                 @endforelse
             </table>
-
+            <div class="d-flex justify-content-end">
+                {{$kembali->links()}}
+            </div>
         </div>
 
 

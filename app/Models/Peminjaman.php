@@ -61,4 +61,7 @@ class Peminjaman extends Model
         return Peminjaman::where([['status','!=',0],['status','!=',2]]);
     }
 
+    public function scopeFilter($query, $filter){
+        return $query->where('status','=',$filter);
+    }
 }

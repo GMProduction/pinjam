@@ -19,13 +19,13 @@ class BarangController extends CustomController
      */
     public function getAllProduct()
     {
-        $barang     = Barang::all();
+        $barang     = Barang::get();
         $dataBarang = [];
-        foreach ($barang as $bar) {
+        foreach ($barang as $key => $bar) {
+            $dataBarang[$key] = $bar;
             $keluar       = Peminjaman::where([['id_barang', '=', $bar->id], ['status', '=', 4]])->sum('qty');
             $stok         = (int)$bar->qty - (int)$keluar;
-            $dataBarang[] = Arr::add($bar, 'stok', $stok);
-
+            Arr::add($dataBarang[$key], 'stok', $stok);
         }
 
         return $dataBarang;
@@ -37,7 +37,6 @@ class BarangController extends CustomController
     public function index()
     {
         $barang = $this->getAllProduct();
-
         return view('test')->with(['barang' => $barang]);
     }
 
@@ -164,7 +163,6 @@ class BarangController extends CustomController
             }else{
                 Barang::create($field);
             }
-
             return redirect('/admin/barang');
         }
 
