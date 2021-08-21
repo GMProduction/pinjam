@@ -67,6 +67,13 @@ return [
             'visibility' => 'public',
         ],
 
+        'imagesBarang' => [
+            'driver' => 'local',
+            'root' => public_path() . '/images/barang',
+            'url' => env('APP_URL') . '/storage',
+            'visibility' => 'public',
+        ],
+
     ],
 
     /*

@@ -77,7 +77,7 @@
                             {{$key + 1}}
                         </td>
                         <td>
-                            {{$g->tanggal_pinjam}}
+                            {{date('d F Y', strtotime($g->tanggal_pinjam))}}
                         </td>
                         <td>
                             {{$g->getBarang->nama_barang}}

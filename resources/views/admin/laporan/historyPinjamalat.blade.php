@@ -18,7 +18,7 @@
 
 
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5>Data Laporan Peminjaman</h5>
+                <h5>History Peminjaman</h5>
             </div>
 
             <table class="table table-striped table-bordered ">

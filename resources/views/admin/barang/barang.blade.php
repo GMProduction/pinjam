@@ -56,19 +56,19 @@
                             {{$key + 1}}
                         </td>
                         <td>
-
+                            <img src="{{$bar->image}}" height="70">
                         </td>
                         <td>
                             {{$bar->nama_barang}}
                         </td>
                         <td>
-                        {{$bar->qty}}
+                            {{$bar->qty}}
                         </td>
                         <td>
                             {{$bar->stok}}
                         </td>
                         <td>
-                            <a class="btn btn-success btn-sm" id="editData"  data-id="{{$bar->id}}" data-name="{{$bar->nama_barang}}" data-qty="{{$bar->qty}}">Ubah
+                            <a class="btn btn-success btn-sm" id="editData" data-image="{{$bar->image}}" data-id="{{$bar->id}}" data-name="{{$bar->nama_barang}}" data-qty="{{$bar->qty}}">Ubah
                             </a>
                             <button type="button" class="btn btn-danger btn-sm" onclick="hapus('{{$bar->id}}', ' {{$bar->nama_barang}}') ">hapus</button>
                         </td>
@@ -85,37 +85,39 @@
         </div>
 
 
-
-            <!-- Modal Tambah-->
-            <div class="modal fade" id="tambahbarang" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Tambah Barang</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <form method="post" id="formBarang">
-                                @csrf
-                                <input id="id" name="id" hidden>
-                                <div class="mb-3">
-                                    <label for="namabarang" class="form-label">Nama Barang</label>
-                                    <input type="text" class="form-control" id="nama_barang" name="nama_barang">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="jumlah" class="form-label">Jumlah</label>
-                                    <input type="number" class="form-control" id="qty" name="qty">
-                                </div>
-
-                                <div class="mb-4"></div>
-                                <a type="submit" class="btn btn-primary" onclick="save()">Simpan</a>
-                            </form>
-                        </div>
-
+        <!-- Modal Tambah-->
+        <div class="modal fade" id="tambahbarang" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Tambah Barang</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
+                    <div class="modal-body">
+                        <form method="post" id="formBarang" enctype="multipart/form-data" onsubmit="return save()">
+                            @csrf
+                            <input id="id" name="id" hidden>
+                            <div class="mb-3">
+                                <label for="namabarang" class="form-label">Nama Barang</label>
+                                <input type="text" class="form-control" id="nama_barang" name="nama_barang">
+                            </div>
+                            <div class="mb-3">
+                                <label for="jumlah" class="form-label">Jumlah</label>
+                                <input type="number" class="form-control" id="qty" name="qty">
+                            </div>
+                            <div class="mb-3">
+                                <label for="image" class="form-label">Gambar</label>
+                                <input type="file" class="form-control" id="image" name="image">
+                            </div>
+                            <img id="img" src="" style="width: 200px">
+                            <div class="mb-4"></div>
+                            <button type="submit" class="btn btn-primary">Simpan</button>
+                        </form>
+                    </div>
+
                 </div>
             </div>
-
+        </div>
 
 
     </section>
@@ -135,21 +137,24 @@
             $('#tambahbarang').modal('show');
         }
 
-       $(document).on('click', '#editData', function () {
-           $('#tambahbarang #id').val($(this).data('id'));
-           $('#tambahbarang #nama_barang').val($(this).data('name'));
-           $('#tambahbarang #qty').val($(this).data('qty'));
-           $('#tambahbarang').modal('show');
-       })
+        $(document).on('click', '#editData', function () {
+            $('#tambahbarang #id').val($(this).data('id'));
+            $('#tambahbarang #nama_barang').val($(this).data('name'));
+            $('#tambahbarang #img').attr('src', $(this).data('image'))
+            $('#tambahbarang #qty').val($(this).data('qty'));
+            $('#tambahbarang').modal('show');
+        })
 
         function save() {
             var ket = 'menambah';
             if ($('#tambahbarang #id').val() !== '') {
                 ket = 'merubah';
             }
+            var form_data = new FormData($('#formBarang')[0]);
+
             swal({
-                title: ket +" data?",
-                text: "Apa kamu yakin ingin "+ket+" data ",
+                title: ket + " data?",
+                text: "Apa kamu yakin ingin " + ket + " data ",
                 icon: "info",
                 buttons: true,
                 primariMode: true,
@@ -158,22 +163,27 @@
                     if (res) {
                         $.ajax({
                             type: "POST",
+                            data: form_data,
                             url: '/admin/barang',
-                            data: $('#formBarang').serialize(),
+                            async: true,
+                            processData: false,
+                            contentType: false,
                             headers: {
                                 'Accept': "application/json"
                             },
                             success: function (data, textStatus, xhr) {
+                                console.log(data);
+
                                 if (xhr.status === 200) {
-                                    swal("Berhasil "+ket+" data!", {
+                                    swal("Data Updated ", {
                                         icon: "success",
                                     }).then((dat) => {
-                                        window.location.reload();
+                                        window.location.reload()
                                     });
                                 } else {
                                     swal(data['msg'])
                                 }
-                                console.log()
+                                console.log(data);
                             },
                             complete: function (xhr, textStatus) {
                                 console.log(xhr.status);
@@ -184,20 +194,19 @@
                                 // console.log("LOG ERROR", error.responseJSON.errors[Object.keys(error.responseJSON.errors)[0]][0]);
                                 console.log(xhr.status);
                                 console.log(textStatus);
+                                console.log(error.responseJSON);
                                 swal(error.responseJSON.errors[Object.keys(error.responseJSON.errors)[0]][0])
                             }
                         })
                     }
                 });
 
-
         }
-
 
         function hapus(id, name) {
             swal({
                 title: "Menghapus data?",
-                text: "Apa kamu yakin, ingin menghapus data "+name+"!",
+                text: "Apa kamu yakin, ingin menghapus data " + name + "!",
                 icon: "warning",
                 buttons: true,
                 dangerMode: true,
@@ -207,13 +216,13 @@
                         let data = {
                             '_token': '{{csrf_token()}}',
                         };
-                       $.post('/admin/barang/delete/'+id,data ,function () {
-                           swal("Berhasil Menghapus data!", {
-                               icon: "success",
-                           }).then((dat) => {
-                               window.location.reload();
-                           });
-                       })
+                        $.post('/admin/barang/delete/' + id, data, function () {
+                            swal("Berhasil Menghapus data!", {
+                                icon: "success",
+                            }).then((dat) => {
+                                window.location.reload();
+                            });
+                        })
                     } else {
                         swal("Data belum terhapus");
                     }

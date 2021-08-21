@@ -139,18 +139,30 @@ class BarangController extends CustomController
             'barang' => $this->getAllProduct()
         ];
         if ($this->request->isMethod('POST')) {
-            $this->request->validate(
+            $field = $this->request->validate(
                 [
                     'nama_barang' => 'required|string',
                     'qty'         => 'required|int',
                 ]
             );
+            $img = $this->request->files->get('image');
+            if ($img || $img != '') {
+                $image     = $this->generateImageName('image');
+                $stringImg = '/images/barang/'.$image;
+                $this->uploadImage('image', $image, 'imagesBarang');
+                $field = Arr::add($field, 'image', $stringImg);
+            }
             if ($this->request->get('id')){
                 $bar = Barang::find($this->request->get('id'));
-                $bar->update($this->request->all());
+                if ($img && $bar->image){
+                    if (file_exists('../public'.$bar->image)) {
+                        unlink('../public'.$bar->image);
+                    }
+                }
+                $bar->update($field);
 
             }else{
-                Barang::create($this->request->all());
+                Barang::create($field);
             }
 
             return redirect('/admin/barang');
