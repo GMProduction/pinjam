@@ -29,12 +29,9 @@
                                 <option value="Menunggu Guru">Menunggu Guru</option>
                                 <option value="Menunggu Siswa Ambil">Menunggu Siswa Ambil</option>
                                 <option value="Di pinjam">Di pinjam</option>
-                                <option value="Di kembalikan">Di kembalikan</option>
                             </select>
                         </form>
-
                     </div>
-
                 </div>
             </div>
 
