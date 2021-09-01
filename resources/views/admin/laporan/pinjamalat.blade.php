@@ -32,9 +32,8 @@
                                 <option value="Di kembalikan">Di kembalikan</option>
                             </select>
                         </form>
-                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
-                                data-bs-target="#tambahsiswa">Cetak
-                        </button>
+                        <a class="btn btn-primary btn-sm" href="/cetaklaporan">Cetak
+                    </a>
                     </div>
 
                 </div>
