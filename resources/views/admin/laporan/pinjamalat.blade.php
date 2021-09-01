@@ -32,8 +32,7 @@
                                 <option value="Di kembalikan">Di kembalikan</option>
                             </select>
                         </form>
-                        <a class="btn btn-primary btn-sm" href="/cetaklaporan">Cetak
-                    </a>
+
                     </div>
 
                 </div>
@@ -109,7 +108,7 @@
                             @elseif($g->status == 3)
                                 <a class="btn btn-primary btn-sm" onclick="konfirmasi(this)" data-status="4" data-id="{{$g->id}}" data-nama="{{$g->getBarang->nama_barang}}">Diambil</a>
                             @elseif($g->status == 4)
-                                <a class="btn btn-primary btn-sm" onclick="konfirmasi(this)" data-status="5" data-id="{{$g->id}}" data-nama="{{$g->getBarang->nama_barang}}">Dikembalikan</a>
+                                <a class="btn btn-primary btn-sm" id="kembali" data-status="5" data-id="{{$g->id}}" data-nama="{{$g->getBarang->nama_barang}}">Dikembalikan</a>
                             @elseif($g->status == 1)
                                 <label>Ditolak Staf</label>
                             @elseif($g->status == 11)
@@ -131,6 +130,34 @@
             </div>
         </div>
 
+        <div class="modal fade" id="barandiambil" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Tambah Barang</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="post" id="form" onsubmit="return konfirmasiKembali()">
+                            @csrf
+                            <input id="id" name="id" hidden>
+                            <input id="status" name="status" hidden>
+                            <div class="mb-3">
+                                <label for="namabarang" class="form-label">Nama Barang</label>
+                                <input type="text" class="form-control" id="namabarang" name="namabarang">
+                            </div>
+                            <div class="mb-3">
+                                <label for="keterangan" class="form-label">Kondisi Barang</label>
+                                <textarea class="form-control" id="keterangan" name="kondisi_barang"></textarea>
+                            </div>
+                            <div class="mb-4"></div>
+                            <button type="submit" class="btn btn-primary">Simpan</button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
 
     </section>
 
@@ -138,6 +165,17 @@
 
 @section('script')
     <script>
+        $(document).on('click', '#kembali', function () {
+            var id = $(this).data('id')
+            var nama = $(this).data('nama')
+            var status = $(this).data('status')
+
+            $('#barandiambil #id').val(id)
+            $('#barandiambil #namabarang').val(nama)
+            $('#barandiambil #status').val(status)
+            $('#barandiambil').modal('show')
+        })
+
         $(document).ready(function () {
             $('#statusCari').val('{{request('status')}}')
 
@@ -150,6 +188,52 @@
         $(document).on('change', '#statusCari', function () {
             document.getElementById('formCari').submit();
         })
+
+        function konfirmasiKembali() {
+            swal({
+                title: "Pengembalian Pinjaman ?",
+                text: "Apa kamu yakin ingin kembalikan peminjaman barang " + $('#barandiambil #namabarang') + "? ",
+                icon: "info",
+                buttons: true,
+                primariMode: true,
+            })
+                .then((res) => {
+                    if (res) {
+                        $.ajax({
+                            type: "POST",
+                            url: '/admin/laporanpinjaman',
+                            data: $('#form').serialize(),
+                            headers: {
+                                'Accept': "application/json"
+                            },
+                            success: function (data, textStatus, xhr) {
+                                if (xhr.status === 200) {
+                                    swal("Pinjaman berhasil dikembalikan ", {
+                                        icon: "success",
+                                    }).then((dat) => {
+                                        window.location.reload();
+                                    });
+                                } else {
+                                    swal(data['msg'])
+                                }
+                                console.log()
+                            },
+                            complete: function (xhr, textStatus) {
+                                console.log(xhr.status);
+                                console.log(textStatus);
+                            },
+                            error: function (error, xhr, textStatus) {
+                                console.log("LOG ERROR", error.responseJSON.errors);
+                                console.log("LOG ERROR", error.responseJSON.errors[Object.keys(error.responseJSON.errors)[0]][0]);
+                                console.log(xhr.status);
+                                console.log(textStatus);
+                                swal(error.responseJSON.errors[Object.keys(error.responseJSON.errors)[0]][0])
+                            }
+                        })
+                    }
+                });
+            return false;
+        }
 
         function konfirmasi(data) {
             var nama = $(data).data('nama');

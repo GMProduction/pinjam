@@ -143,7 +143,7 @@
                         Nama Barang
                     </th>
                     <th>
-                        Jumlah Pinjam
+                        Qty
                     </th>
 
                     <th>
@@ -153,26 +153,44 @@
                     <th>
                         Mapel
                     </th>
+                    <th>
+                        Kondisi
+                    </th>
                 </tr>
             </thead>
             <tbody>
-                {{-- @forelse($data as $key => $d) --}}
+            @forelse($kembali as $key => $g)
                 <tr>
-                    {{-- <td>{{$key+1}}</td> --}}
-                    {{-- <td>{{$d->getPelanggan->nama}}</td>
-                      <td>{{date('d F Y', strtotime($d->tanggal_pesanan))}}</td> --}}
-                    <td>1</td>
-                    <td>Tanggal Pinjam</td>
-                    <td>Tanggal Kembali</td>
-                    <td>Nama</td>
-                    <td>3</td>
-                    <td>Joko</td>
-                    <td>Fisika</td>
-
+                    <td>
+                        {{$key + 1}}
+                    </td>
+                    <td>
+                        {{date('d F Y', strtotime($g->tanggal_pinjam))}}
+                    </td>
+                    <td>
+                        {{date('d F Y', strtotime($g->updated_at))}}
+                    </td>
+                    <td>
+                        {{$g->getBarang->nama_barang}}
+                    </td>
+                    <td>
+                        {{$g->qty}}
+                    </td>
+                    <td>
+                        {{$g->getSiswa->nama}}
+                    </td>
+                    <td>
+                        {{$g->getMapel->nama_mapel}}
+                    </td>
+                    <td>
+                        {{$g->kondisi_barang}}
+                    </td>
                 </tr>
-                {{-- @empty --}}
-
-                {{-- @endforelse --}}
+            @empty
+                <tr>
+                    <td colspan="8" class="text-center">Tidak ada data pinjaman dikembalikan</td>
+                </tr>
+            @endforelse
 
             </tbody>
         </table>

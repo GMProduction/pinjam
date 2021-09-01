@@ -49,9 +49,14 @@ class PeminjamanSiswaController extends CustomController
 
     public function dataBarangDikembalikan()
     {
-        $pinjam = Peminjaman::with(['getSiswa', 'getBarang', 'getMapel.getGuru', 'getGuru', 'getStaf'])->where('status', '=', 5)->orderBy('created_at', 'desc')->paginate(10);
+        $start   = \request('start');
+        $end     = \request('end');
 
-        return $pinjam;
+        $pinjam = Peminjaman::with(['getSiswa', 'getBarang', 'getMapel.getGuru', 'getGuru', 'getStaf'])->where('status', '=', 5)->orderBy('created_at', 'desc');
+            if ($start){
+            $pinjam = $pinjam->whereBetween('updated_at', [date('Y-m-d 00:00:00', strtotime($start)), date('Y-m-d 23:59:59', strtotime($end))]);
+            }
+        return $pinjam->paginate(10);
     }
 
     /**
@@ -224,7 +229,7 @@ class PeminjamanSiswaController extends CustomController
     }
 
 
-    
+
     public function cetakLaporan()
     {
 //        return $this->dataLaporan();
@@ -236,8 +241,6 @@ class PeminjamanSiswaController extends CustomController
 
     public function dataLaporan()
     {
-        $start   = \request('start');
-        $end     = \request('end');
         $pesanan = $this->dataBarangDikembalikan();
         // $total   = Pesanan::where('status_pesanan', '=', 4);
         // if ($start) {
@@ -247,7 +250,7 @@ class PeminjamanSiswaController extends CustomController
         $data = [
             'start' => \request('start'),
             'end' => \request('end'),
-            'data' => $pesanan,
+            'kembali' => $pesanan,
             // 'total' => $total
         ];
 

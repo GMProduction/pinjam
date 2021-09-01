@@ -22,6 +22,8 @@
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link href="https://cdn.jsdelivr.net/npm/boxicons@2.0.5/css/boxicons.min.css" rel="stylesheet" />
     <!-- custom css -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" rel="stylesheet"/>
+
 
     <script src="{{ asset('js/swal.js') }}"></script>
 
@@ -87,7 +89,7 @@
             <a href="/admin/history-pinjamam" class="mb-auto">
                 <li href="#" class="nav-link t-white">
                     <i class="bx bx-file"></i>
-                    <span class="mx-2">History Peminjam</span>
+                    <span class="mx-2">History Pengembalian</span>
                 </li>
             </a>
 
@@ -123,6 +125,8 @@
     <script src="{{ asset('js/myStyle.js') }}"></script>
     <script src="{{ asset('js/sidebar.js') }}"></script>
     <script src="{{ asset('js/dialog.js') }}"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     @yield('script')
 </body>

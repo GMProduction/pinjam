@@ -1,7 +1,7 @@
 @extends('admin.base')
 
 @section('title')
-    Data Laporan Peminjaman
+    Data Laporan Pengembalian
 @endsection
 
 @section('content')
@@ -18,7 +18,21 @@
 
 
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5>History Peminjaman</h5>
+                <h5>History Pengembalian</h5>
+                <form id="formTanggal">
+                    <div class="d-flex align-items-center">
+                        <i class='bx bx-calendar me-2' style="font-size: 1.4rem"></i>
+                        <div class="me-2">
+                            <div class="input-group input-daterange">
+                                <input type="text" class="form-control me-2" name="start" value="{{request('start')}}" required>
+                                <div class="input-group-addon">to</div>
+                                <input type="text" class="form-control ms-2" name="end" value="{{request('end')}}" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-success mx-2">Cari</button>
+                        <a class="btn btn-warning" id="cetak" target="_blank">Cetak</a>
+                    </div>
+                </form>
             </div>
 
             <table class="table table-striped table-bordered ">
@@ -97,15 +111,14 @@
 
 @section('script')
     <script>
-        $(document).ready(function () {
-
-        })
-
-
-    </script>
-    <script>
-        $(function () {
-            $("#datepicker").datepicker();
+        $('.input-daterange input').each(function () {
+            $(this).datepicker({
+                format: "dd-mm-yyyy"
+            });
         });
+        $(document).on('click','#cetak', function () {
+            console.log('/cetaklaporan?'+$('#formTanggal').serialize());
+            $(this).attr('href', '/cetaklaporan?'+$('#formTanggal').serialize());
+        })
     </script>
 @endsection
