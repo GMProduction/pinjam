@@ -67,5 +67,5 @@ Route::prefix('/admin')->middleware([AdminMiddleware::class])->group(
     }
 );
 
-
+Route::get('/cetaklaporan',[PeminjamanSiswaController::class, 'cetakLaporan']);
 
