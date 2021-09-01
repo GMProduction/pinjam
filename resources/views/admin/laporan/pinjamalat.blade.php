@@ -49,14 +49,20 @@
                     Tanggal Pinjam
                 </th>
                 <th>
+                    Estimasi Kembali
+                </th>
+                <th>
+                    Tanggal Kembali
+                </th>
+                <th>
                     Nama Barang
                 </th>
                 <th>
-                    Jumlah Pinjam
+                    Qty
                 </th>
 
                 <th>
-                    Nama Siswa
+                    Siswa
                 </th>
 
                 <th>
@@ -77,6 +83,12 @@
                         </td>
                         <td>
                             {{date('d F Y', strtotime($g->tanggal_pinjam))}}
+                        </td>
+                        <td>
+                            {{$g->tanggal_kembali ? date('d F Y', strtotime($g->tanggal_kembali)) : ''}}
+                        </td>
+                        <td>
+                            {{$g->status == 5 ? date('d F Y', strtotime($g->updated_at)) : '-'}}
                         </td>
                         <td>
                             {{$g->getBarang->nama_barang}}

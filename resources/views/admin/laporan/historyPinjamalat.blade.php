@@ -36,7 +36,7 @@
                     Nama Barang
                 </th>
                 <th>
-                    Jumlah Pinjam
+                    Qty
                 </th>
 
                 <th>
@@ -45,6 +45,9 @@
 
                 <th>
                     Mapel
+                </th>
+                <th>
+                    Kondisi
                 </th>
 
                 </thead>
@@ -55,10 +58,10 @@
                             {{$key + 1}}
                         </td>
                         <td>
-                            {{$g->tanggal_pinjam}}
+                            {{date('d F Y', strtotime($g->tanggal_pinjam))}}
                         </td>
                         <td>
-                            {{$g->tanggal_kembali ?? '-'}}
+                            {{date('d F Y', strtotime($g->updated_at))}}
                         </td>
                         <td>
                             {{$g->getBarang->nama_barang}}
@@ -71,6 +74,9 @@
                         </td>
                         <td>
                             {{$g->getMapel->nama_mapel}}
+                        </td>
+                        <td>
+                            {{$g->kondisi_barang}}
                         </td>
                     </tr>
                 @empty

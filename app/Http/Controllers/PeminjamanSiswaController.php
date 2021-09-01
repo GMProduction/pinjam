@@ -164,6 +164,7 @@ class PeminjamanSiswaController extends CustomController
                 $pinjam->update(
                     [
                         'tanggal_kembali' => $this->now,
+                        'kondisi_barang' => $this->request->get('kondisi_barang')
                     ]
                 );
             }
