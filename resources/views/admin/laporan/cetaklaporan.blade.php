@@ -214,7 +214,7 @@
         <footer class="footer">
             @php $date = new DateTime("now", new DateTimeZone('Asia/Bangkok') ); @endphp
             <p class="text-right small mb-0 mt-0 pt-0 pb-0"> di cetak oleh :
-                {{ auth()->user()->username }}
+                {{ auth()->user()->username }} tgl: {{ $date->format('d F Y, H:i:s') }}
             </p>
             <p class="text-right small mb-0 mt-0 pt-0 pb-0"> tgl: {{ $date->format('d F Y, H:i:s') }} </p>
         </footer>

@@ -109,6 +109,12 @@
                                 <label for="image" class="form-label">Gambar</label>
                                 <input type="file" class="form-control" id="image" name="image">
                             </div>
+
+                            <div class="form-group">
+                                <label for="exampleFormControlTextarea1">Deskripsi</label>
+                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                              </div>
+
                             <img id="img" src="" style="width: 200px">
                             <div class="mb-4"></div>
                             <button type="submit" class="btn btn-primary">Simpan</button>
