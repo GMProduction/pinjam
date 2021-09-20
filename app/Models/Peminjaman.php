@@ -19,7 +19,8 @@ class Peminjaman extends Model
         'id_staf',
         'tanggal_pinjam',
         'tanggal_kembali',
-        'id_mapel'
+        'id_mapel',
+        'kondisi_barang'
     ];
 
     /**

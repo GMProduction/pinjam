@@ -91,6 +91,7 @@ class APIPeminjamanSiswaController extends CustomController
             [
                 'qty'            => 'required|int',
                 'tanggal_pinjam' => 'required',
+                'tanggal_kembali' => 'required'
             ]
         );
 
@@ -103,6 +104,7 @@ class APIPeminjamanSiswaController extends CustomController
                 'id_barang'      => $barang->id,
                 'tanggal_pinjam' => $this->request->get('tanggal_pinjam'),
                 'id_mapel'       => $mapel->id,
+                'tanggal_kembali' => $this->request->get('tanggal_kembali')
             ]
         );
 
