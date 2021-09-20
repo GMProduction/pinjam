@@ -19,7 +19,7 @@
                 <th>
                     Tanggal Pinjam
                 </th>
-                <th>Estimasi Tanggal Kembali
+                <th>Tanggal Kembali
                 </th>
                 <th>
                     Nama Barang
@@ -104,7 +104,7 @@
                 <th>
                     Tanggal Pinjam
                 </th>
-                <th>Estimasi Tanggal Kembali
+                <th>Tanggal Kembali
                 </th>
                 <th>
                     Nama Barang
@@ -135,7 +135,7 @@
                         <td>
                             {{date('d F Y', strtotime($g->tanggal_pinjam))}}
                         </td>
-                        <td>
+                        <td style="{{$g->tanggal_kembali < now('Asia/Jakarta') ? 'color: red' : ''}}">
                             {{$g->tanggal_kembali ? date('d F Y', strtotime($g->tanggal_kembali)) : ''}}
                         </td>
                         <td>

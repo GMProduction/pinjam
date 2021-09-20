@@ -69,7 +69,7 @@
                 @forelse($kembali as $key => $g)
                     <tr>
                         <td>
-                            {{$key + 1}}
+                            {{$pinjam->firstItem() + $key}}
                         </td>
                         <td>
                             {{date('d F Y', strtotime($g->tanggal_pinjam))}}
