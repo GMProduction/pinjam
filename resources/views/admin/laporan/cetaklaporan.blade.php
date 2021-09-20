@@ -115,19 +115,23 @@
         <img src="{{ public_path('static-image/logo.png') }}" style="width: 70px; float: left;" />
 
         <div style="margin-top: 30px">
-            <h4 style=" text-align: right;margin-bottom:0;margin-top:0">Laporan Peminjaman</h4>
-            <h5 style=" text-align: right;margin-bottom:0;margin-top:0">Periode</h5>
-            @if ($start)
-                <h5 style=" text-align: right;margin-bottom:0;margin-top:0">{{ date('d F Y', strtotime($start)) }} -
-                    {{ date('d F Y', strtotime($end)) }}</h5>
-            @else
-                <h5 style=" text-align: right;margin-bottom:0;margin-top:0">Semua</h5>
-            @endif
+            <h4 style=" text-align: center;margin-bottom:0;margin-top:0">DINAS PENDIDIKAN KABUPATEN KARANGANYAR</h4>
+            <h4 style=" text-align: center;margin-bottom:0;margin-top:0">SMK NEGERI 5 MATESIH</h4>
+            <h5 style=" text-align: center;margin-bottom:0;margin-top:0"> Bayanan, Matesih, Kabupaten Karanganyar, Jawa
+                Tengah 57781</h5>
+
         </div>
-
+        <hr>
         <br>
+        <h5 style=" text-align: right;margin-bottom:0;margin-top:0"> Periode:</h5>
+        @if ($start)
+            <h5 style=" text-align: right;margin-bottom:0;margin-top:0">{{ date('d F Y', strtotime($start)) }} -
+                {{ date('d F Y', strtotime($end)) }}</h5>
+        @else
+            <h5 style=" text-align: right;margin-bottom:0;margin-top:0">Semua</h5>
+        @endif
 
-        <table>
+        <table style="margin-top: 30px">
             <thead>
                 <tr>
                     <th>
